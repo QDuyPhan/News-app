@@ -1,0 +1,25 @@
+package com.example.newsapp.utils
+
+import timber.log.Timber
+
+object Logger {
+    fun log(message: String) {
+        Timber.e(message)
+    }
+
+    fun logI(message: String) {
+        Timber.i(message)
+    }
+
+    fun logD(message: String) {
+        Timber.d(message)
+    }
+
+    fun logW(message: String) {
+        Timber.w(message)
+    }
+
+    fun plant() {
+        Timber.plant(Timber.DebugTree())
+    }
+}

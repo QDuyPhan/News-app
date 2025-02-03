@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kapt)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
-    id("androidx.navigation.safeargs.kotlin")
+//    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.fragment.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -65,6 +67,7 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
@@ -91,7 +94,7 @@ dependencies {
     //paging
     implementation(libs.androidx.paging.common.ktx)
     implementation(libs.androidx.paging.runtime.ktx)
-      // Timber
+    // Timber
     implementation(libs.timber)
     // Room
     implementation(libs.androidx.room.runtime)
