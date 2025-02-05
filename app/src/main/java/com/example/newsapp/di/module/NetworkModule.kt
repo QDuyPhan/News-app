@@ -5,6 +5,8 @@ import com.example.newsapp.utils.Constants.BASE_URL
 import com.example.newsapp.utils.Constants.NETWORK_TIMEOUT
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,7 +45,6 @@ object NetworkModule {
             .readTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
             .build()
     }
-
 
     @Singleton
     @Provides

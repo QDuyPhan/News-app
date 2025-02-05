@@ -104,4 +104,7 @@ dependencies {
     implementation(libs.androidx.room.paging)
     implementation(libs.androidx.preference.ktx)
     implementation(libs.sdp.android)
+    // Moshi
+    implementation(libs.moshi.kotlin)
+
 }

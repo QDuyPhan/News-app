@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivitySplashBinding
-import com.example.newsapp.ui.login.LoginFragment
+import com.example.newsapp.ui.account.LoginFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
