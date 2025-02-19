@@ -1,7 +1,9 @@
 package com.example.newsapp.data.remote.response
 
+import com.google.gson.annotations.SerializedName
+
 data class ApiResponse<T>(
-    val code: Int,
-    val message: String,
-    val data: T
+    @SerializedName("code") val code: Int,
+    @SerializedName("message") val message: String,
+    @SerializedName("data") val data: T
 )

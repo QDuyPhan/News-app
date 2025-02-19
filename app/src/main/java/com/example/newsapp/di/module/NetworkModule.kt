@@ -1,29 +1,27 @@
 package com.example.newsapp.di.module
 
-import com.example.newsapp.data.remote.NetworkInterceptor
-import com.example.newsapp.utils.Constants.BASE_URL
+import com.example.newsapp.BuildConfig
+import com.example.newsapp.data.remote.service.NewsService
 import com.example.newsapp.utils.Constants.NETWORK_TIMEOUT
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import jakarta.inject.Singleton
+import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     @Provides
     @Singleton
-    fun provideBaseUrl() = BASE_URL
+    fun provideBaseUrl() = BuildConfig.BASE_URL
 
     @Provides
     @Singleton
@@ -35,24 +33,34 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient(): OkHttpClient {
+    fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        return OkHttpClient.Builder()
+        OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(NetworkInterceptor())
-            .connectTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(NETWORK_TIMEOUT, TimeUnit.SECONDS)
+            .build()
+    } else OkHttpClient
+        .Builder()
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        baseUrl: String,
+        gson: Gson,
+        okHttpClient: OkHttpClient
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 
-    @Singleton
+
     @Provides
-    fun provideRetrofit(client: OkHttpClient): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
+    @Singleton
+    fun provideNewsService(retrofit: Retrofit): NewsService =
+        retrofit.create(NewsService::class.java)
+
 }

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,13 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
 //    id("androidx.navigation.safeargs.kotlin")
+}
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("key.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use {
+        localProperties.load(it)
+    }
 }
 
 android {
@@ -19,17 +28,63 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField(
+            type = "String", name = "BASE_URL", value = localProperties["BASE_URL"].toString()
+        )
+        buildConfigField(
+            type = "String",
+            name = "RELEASE_STORE_FILE",
+            value = localProperties["RELEASE_STORE_FILE"].toString()
+        )
+        buildConfigField(
+            type = "String",
+            name = "RELEASE_STORE_PASSWORD",
+            value = localProperties["RELEASE_STORE_PASSWORD"].toString()
+        )
+        buildConfigField(
+            type = "String",
+            name = "RELEASE_KEY_ALIAS",
+            value = localProperties["RELEASE_KEY_ALIAS"].toString()
+        )
+        buildConfigField(
+            type = "String",
+            name = "RELEASE_KEY_PASSWORD",
+            value = localProperties["RELEASE_KEY_PASSWORD"].toString()
+        )
+
+
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("D:\\Work\\News-app\\keystore\\mykeystore.jks")
+            storePassword = "password"
+            keyAlias = "mydomain"
+            keyPassword = "password"
+        }
+        create("release") {
+            storeFile = file("D:\\Work\\News-app\\keystore\\mykeystore.jks")
+            storePassword = "password"
+            keyAlias = "mydomain"
+            keyPassword = "password"
+        }
     }
 
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
+
+        }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -47,6 +102,7 @@ android {
     dataBinding {
         enable = true
     }
+
 }
 
 dependencies {
@@ -74,7 +130,7 @@ dependencies {
     //Gson
     implementation(libs.gson)
     // Coroutine
-    implementation(libs.kotlinx.coroutines.core)
+//    implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     // ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)

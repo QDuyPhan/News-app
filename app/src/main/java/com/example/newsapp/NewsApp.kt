@@ -10,6 +10,6 @@ class NewsApp : Application() {
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG)
-            Logger.plant()
+            Timber.plant(Timber.DebugTree())
     }
 }

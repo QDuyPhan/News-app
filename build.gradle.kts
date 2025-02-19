@@ -7,12 +7,12 @@ plugins {
     alias(libs.plugins.hilt.android) apply false
 }
 
-//buildscript {
-//    repositories {
-//        google()
-//        mavenCentral()
-//    }
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
 //    dependencies {
 //        classpath(libs.androidx.navigation.safe.args.gradle.plugin)
 //    }
-//}
+}

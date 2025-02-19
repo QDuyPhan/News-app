@@ -3,7 +3,7 @@ package com.example.newsapp.utils
 import timber.log.Timber
 
 object Logger {
-    fun log(message: String) {
+    fun logE(message: String) {
         Timber.e(message)
     }
 

@@ -2,16 +2,16 @@ package com.example.newsapp.di.module
 
 import android.app.Application
 import android.content.Context
-import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import jakarta.inject.Singleton
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class AppModule {
-    @Binds
+object AppModule {
+    @Provides
     @Singleton
-    abstract fun provideContext(application: Application): Context
+    fun provideContext(application: Application): Context = application.applicationContext
 }

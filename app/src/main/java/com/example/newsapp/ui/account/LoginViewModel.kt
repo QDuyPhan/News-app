@@ -23,20 +23,30 @@ class LoginViewModel @Inject constructor(private val newsRepository: NewsReposit
     val loginResult: LiveData<Resource<ApiResponse<AuthenticationResponse>>> get() = _loginResult
 
     fun login(username: String, password: String) = viewModelScope.launch(exceptionHandler) {
-        callLogin(LoginRequest(username, password)).enqueue(object :
-            Callback<ApiResponse<AuthenticationResponse>> {
-            override fun onResponse(
-                call: Call<ApiResponse<AuthenticationResponse>>,
-                response: Response<ApiResponse<AuthenticationResponse>>
-            ) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onFailure(p0: Call<ApiResponse<AuthenticationResponse>>, p1: Throwable) {
-                TODO("Not yet implemented")
-            }
-
-        })
+//        callLogin(LoginRequest(username, password)).enqueue(object :
+//            Callback<ApiResponse<AuthenticationResponse>> {
+//            override fun onResponse(
+//                call: Call<ApiResponse<AuthenticationResponse>>,
+//                response: Response<ApiResponse<AuthenticationResponse>>
+//            ) {
+//                if (response.isSuccessful) {
+//                    response.body()?.let {
+//                        _loginResult.value = Resource.Success(it)
+//                    }
+//                } else {
+//                    _loginResult.value = Resource.Error("Login failed", null)
+//                }
+//            }
+//
+//            override fun onFailure(
+//                call: Call<ApiResponse<AuthenticationResponse>>,
+//                throwable: Throwable
+//            ) {
+//                _loginResult.value = Resource.Error("Network error", null)
+//            }
+//
+//        })
+//        registerEventParentJobFinish()
     }
 
     private suspend fun callLogin(loginRequest: LoginRequest): Call<ApiResponse<AuthenticationResponse>> {
