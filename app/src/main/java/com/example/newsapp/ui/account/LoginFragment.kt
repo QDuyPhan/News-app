@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.example.newsapp.databinding.FragmentLoginBinding
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Resource
+import com.example.newsapp.utils.Status
 import com.example.newsapp.utils.setOnSingClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -39,7 +40,7 @@ class LoginFragment : Fragment() {
                     Logger.logI("Hãy Nhập Đầy Đủ Thông Tin")
                 } else {
                     Logger.logI("Username: ${username} Password: ${password}")
-//                    viewModel.login(username, password)
+                    viewModel.login(username, password)
                     setupObserver()
                 }
             }
@@ -49,22 +50,20 @@ class LoginFragment : Fragment() {
     private fun setupObserver() {
         viewModel.loginResult.observe(viewLifecycleOwner) { resource ->
             Logger.logI("Resource: ${resource.data}")
-//            when (resource) {
-//                is Resource.Success -> {
-//                    Logger.logI("Login Success")
-//                    Logger.logI("${resource.data}")
-//                }
-//
-//                is Resource.Error -> {
-//                    Logger.logI(resource.message.toString())
-//                    Logger.logI("Login Fail")
-//                }
-//
-//                is Resource.Loading -> {
-//                    Logger.logI("Loading...")
-//                }
-//            }
+            when (resource.status) {
+                Status.SUCCESS -> {
+                    Logger.logI("Login Successfully")
+                }
 
+                Status.ERROR -> {
+                    val error = resource.message ?: "Unknown error"
+                    Logger.logE(error)
+                }
+
+                Status.LOADING -> {
+                    Logger.logI("Loading...")
+                }
+            }
         }
     }
 }

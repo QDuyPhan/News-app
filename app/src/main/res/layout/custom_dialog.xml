@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+  <data>
+
+  </data>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@drawable/dialog_background"
+      android:padding="@dimen/_30sdp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/check" />
+
+    <TextView
+        android:id="@+id/txtDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Success!"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_20sdp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/imageView"
+        app:layout_constraintStart_toStartOf="@id/imageView"
+        app:layout_constraintTop_toBottomOf="@id/imageView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDialog"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00BA00"
+        android:text="OK"
+        android:textColor="@color/white"
+        app:cornerRadius="10dp"
+        app:layout_constraintEnd_toEndOf="@id/txtDialog"
+        app:layout_constraintStart_toStartOf="@id/txtDialog"
+        app:layout_constraintTop_toBottomOf="@id/txtDialog" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import com.example.newsapp.databinding.CustomDialogBinding
 import com.example.newsapp.databinding.FragmentRegisterBinding
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Resource
@@ -16,11 +18,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
+    private lateinit var dialog: AlertDialog
     private val viewModel by viewModels<RegisterViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
         return binding.root
@@ -54,6 +56,7 @@ class RegisterFragment : Fragment() {
             when (it.status) {
                 Status.SUCCESS -> {
                     Logger.logI("Register Successfully")
+                    showAlertDialog()
                 }
 
                 Status.ERROR -> {
@@ -67,5 +70,17 @@ class RegisterFragment : Fragment() {
             }
 
         }
+    }
+
+    private fun showAlertDialog() {
+        val build = AlertDialog.Builder(requireContext())
+        val dialogBinding = CustomDialogBinding.inflate(LayoutInflater.from(requireContext()))
+        build.setView(dialogBinding.root)
+        dialogBinding.txtDialog.text = "Đăng Ký Thành Công"
+        dialogBinding.btnDialog.setOnSingClickListener {
+            dialog.dismiss()
+        }
+        dialog = build.create()
+        dialog.show()
     }
 }

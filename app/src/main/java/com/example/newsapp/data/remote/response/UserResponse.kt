@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.time.LocalDateTime
 
 data class UserResponse(
-    @SerializedName("id") val id: Long,
+    @SerializedName("id") val id: String,
     @SerializedName("name") val name: String,
     @SerializedName("username") val username: String,
     @SerializedName("email") val email: String,
