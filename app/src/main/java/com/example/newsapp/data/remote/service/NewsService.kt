@@ -1,11 +1,10 @@
 package com.example.newsapp.data.remote.service
 
-import com.example.newsapp.data.remote.request.LoginRequest
-import com.example.newsapp.data.remote.request.SignupRequest
-import com.example.newsapp.data.remote.response.ApiResponse
-import com.example.newsapp.data.remote.response.AuthenticationResponse
-import com.example.newsapp.data.remote.response.LoginResponse
-import com.example.newsapp.data.remote.response.UserResponse
+import com.example.newsapp.data.request.LoginRequest
+import com.example.newsapp.data.request.SignupRequest
+import com.example.newsapp.data.response.ApiResponse
+import com.example.newsapp.data.response.AuthenticationResponse
+import com.example.newsapp.data.response.UserResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -15,7 +14,7 @@ interface NewsService {
     @POST("/api/auth/login")
     fun login(
         @Body loginRequest: LoginRequest
-    ): Call<LoginResponse>
+    ): Call<ApiResponse<AuthenticationResponse>>
 
 
     @POST("/api/users")

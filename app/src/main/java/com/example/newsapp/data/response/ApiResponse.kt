@@ -1,9 +1,9 @@
-package com.example.newsapp.data.remote.response
+package com.example.newsapp.data.response
 
 import com.google.gson.annotations.SerializedName
 
 data class ApiResponse<T>(
     @SerializedName("code") val code: Int,
     @SerializedName("message") val message: String,
-    @SerializedName("data") val data: T
+    @SerializedName("result") val result: T
 )

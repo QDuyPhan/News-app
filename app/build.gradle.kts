@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.kapt)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.ksp)
-//    id("androidx.navigation.safeargs.kotlin")
+    alias(libs.plugins.google.gms.google.services)
 }
 val localProperties = Properties()
 val localPropertiesFile = rootProject.file("key.properties")
@@ -114,6 +114,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.fragment.ktx)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -162,5 +163,12 @@ dependencies {
     implementation(libs.sdp.android)
     // Moshi
     implementation(libs.moshi.kotlin)
-
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore)
+    implementation(libs.play.services.auth)
+    implementation(libs.firebase.database.ktx)
+    implementation(libs.firebase.config.ktx)
 }

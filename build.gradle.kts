@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kapt) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.hilt.android) apply false
+    alias(libs.plugins.google.gms.google.services) apply false
 }
 
 buildscript {
@@ -12,7 +13,4 @@ buildscript {
         google()
         mavenCentral()
     }
-//    dependencies {
-//        classpath(libs.androidx.navigation.safe.args.gradle.plugin)
-//    }
 }

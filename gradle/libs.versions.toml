@@ -1,5 +1,6 @@
 [versions]
-agp = "8.8.0"
+agp = "8.8.1"
+firebaseBom = "33.9.0"
 hiltAndroidVersion = "2.55"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -12,7 +13,8 @@ activity = "1.10.0"
 hiltAndroid = "2.51.1"
 constraintlayout = "2.2.0"
 moshiKotlin = "1.14.0"
-navigationFragmentKtx = "2.8.6"
+navigationFragmentKtx = "2.8.7"
+playServicesAuth = "21.3.0"
 retrofit = "2.11.0"
 gson = "2.10.1"
 kotlinxCoroutinesAndroid = "1.8.1"
@@ -23,18 +25,26 @@ glide = "4.16.0"
 okhttp = "5.0.0-alpha.14"
 coil = "2.6.0"
 roundedimageview = "2.3.0"
-pagingCommonKtx = "3.3.5"
+pagingCommonKtx = "3.3.6"
 timber = "5.0.1"
-roomRuntime = "2.7.0-alpha13"
+roomRuntime = "2.7.0-beta01"
 preferenceKtx = "1.2.1"
 sdpAndroid = "1.1.0"
 legacySupportV4 = "1.0.0"
-fragmentKtx = "1.8.5"
+fragmentKtx = "1.8.6"
+googleGmsGoogleServices = "4.4.2"
+firebaseAuth = "23.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationFragmentKtx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-auth-ktx = { module = "com.google.firebase:firebase-auth-ktx" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx" }
+firebase-database-ktx = { module = "com.google.firebase:firebase-database-ktx" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidVersion" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroidVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -43,6 +53,7 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 moshi-kotlin = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshiKotlin" }
+play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
@@ -69,6 +80,7 @@ androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "ro
 sdp-android = { module = "com.intuit.sdp:sdp-android", version.ref = "sdpAndroid" }
 androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -76,4 +88,5 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 

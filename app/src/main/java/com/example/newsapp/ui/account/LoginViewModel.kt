@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import com.example.newsapp.data.local.PreferenceRepository
 import com.example.newsapp.data.remote.NetworkHelper
 import com.example.newsapp.data.remote.NewsRepository
-import com.example.newsapp.data.remote.request.LoginRequest
-import com.example.newsapp.data.remote.response.LoginResponse
+import com.example.newsapp.data.request.LoginRequest
+import com.example.newsapp.data.response.ApiResponse
+import com.example.newsapp.data.response.AuthenticationResponse
 import com.example.newsapp.ui.base.BaseViewModel
+import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import retrofit2.Call
@@ -21,22 +23,23 @@ class LoginViewModel @Inject constructor(
     private val networkHelper: NetworkHelper,
     private val preferenceRepository: PreferenceRepository
 ) : BaseViewModel() {
-    private val _loginResult = MutableLiveData<Resource<LoginResponse>>()
-    val loginResult: LiveData<Resource<LoginResponse>> get() = _loginResult
+    private val _loginResult = MutableLiveData<Resource<ApiResponse<AuthenticationResponse>>>()
+    val loginResult: LiveData<Resource<ApiResponse<AuthenticationResponse>>> get() = _loginResult
 
     fun login(username: String, password: String) {
         _loginResult.value = Resource.loading(null)
         if (networkHelper.isNetworkConnected()) {
             val call = newsRepository.login(LoginRequest(username, password))
-            call.enqueue(object : Callback<LoginResponse> {
+            call.enqueue(object : Callback<ApiResponse<AuthenticationResponse>> {
                 override fun onResponse(
-                    call: Call<LoginResponse>,
-                    response: Response<LoginResponse>
+                    call: Call<ApiResponse<AuthenticationResponse>>,
+                    response: Response<ApiResponse<AuthenticationResponse>>
                 ) {
                     val responseData = response.body()
                     if (response.isSuccessful) {
                         responseData?.let {
-                            _loginResult.value = Resource.success(responseData)
+                            Logger.logI("Response Data: ${it.result}")
+                            _loginResult.value = Resource.success(it)
                             preferenceRepository.saveTokenKey(it.result.token)
                         }
                     } else {
@@ -45,7 +48,7 @@ class LoginViewModel @Inject constructor(
                 }
 
                 override fun onFailure(
-                    call: Call<LoginResponse>, t: Throwable
+                    call: Call<ApiResponse<AuthenticationResponse>>, t: Throwable
                 ) {
                     _loginResult.value = Resource.error(t.message.toString(), null)
                 }

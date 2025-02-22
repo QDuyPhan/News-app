@@ -29,6 +29,8 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onClickListener()
+        loginWithGoogle()
+        loginWithFacebook()
     }
 
     private fun onClickListener() {
@@ -39,7 +41,6 @@ class LoginFragment : Fragment() {
                 if (username.isEmpty() || password.isEmpty()) {
                     Logger.logI("Hãy Nhập Đầy Đủ Thông Tin")
                 } else {
-                    Logger.logI("Username: ${username} Password: ${password}")
                     viewModel.login(username, password)
                     setupObserver()
                 }
@@ -49,7 +50,6 @@ class LoginFragment : Fragment() {
 
     private fun setupObserver() {
         viewModel.loginResult.observe(viewLifecycleOwner) { resource ->
-            Logger.logI("Resource: ${resource.data}")
             when (resource.status) {
                 Status.SUCCESS -> {
                     Logger.logI("Login Successfully")
@@ -64,6 +64,20 @@ class LoginFragment : Fragment() {
                     Logger.logI("Loading...")
                 }
             }
+        }
+    }
+
+    private fun loginWithGoogle() {
+        val btnGoogle = binding.googleLoginBtn
+        btnGoogle.setOnSingClickListener {
+            Logger.logI("Login with Google")
+        }
+    }
+
+    private fun loginWithFacebook() {
+        val btnGoogle = binding.fbLoginBtn
+        btnGoogle.setOnSingClickListener {
+            Logger.logI("Login with Facebook")
         }
     }
 }

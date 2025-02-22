@@ -1,4 +1,4 @@
-package com.example.newsapp.data.remote.request
+package com.example.newsapp.data.request
 
 import com.google.gson.annotations.SerializedName
 
