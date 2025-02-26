@@ -171,4 +171,7 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.firebase.database.ktx)
     implementation(libs.firebase.config.ktx)
+    // Splash Screen
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.material)
 }

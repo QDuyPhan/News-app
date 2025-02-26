@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentLoginBinding
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Resource
@@ -45,6 +47,9 @@ class LoginFragment : Fragment() {
                     setupObserver()
                 }
             }
+            txtSignup.setOnSingClickListener {
+                findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+            }
         }
     }
 
@@ -53,6 +58,8 @@ class LoginFragment : Fragment() {
             when (resource.status) {
                 Status.SUCCESS -> {
                     Logger.logI("Login Successfully")
+                    val navController = findNavController()
+                    navController.navigate(R.id.action_loginFragment_to_mainFragment)
                 }
 
                 Status.ERROR -> {
@@ -79,5 +86,13 @@ class LoginFragment : Fragment() {
         btnGoogle.setOnSingClickListener {
             Logger.logI("Login with Facebook")
         }
+    }
+
+    private fun loadFragment(fragmentReplace: Fragment) {
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.viewPager2, fragmentReplace)
+            .addToBackStack("HomeFragment")
+            .commit()
     }
 }

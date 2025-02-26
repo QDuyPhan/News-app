@@ -9,16 +9,14 @@
   <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@drawable/background_splashscreen"
-      tools:context=".ui.splash.SplashFragment">
+      android:background="@color/white"
+      tools:context=".ui.main.MainFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Splash Screen"
-        android:textColor="@color/white2"
-        android:textSize="@dimen/_30sdp" />
+        android:text="Main Fragment"
+        android:textSize="@dimen/_39sdp" />
 
   </FrameLayout>
 </layout>

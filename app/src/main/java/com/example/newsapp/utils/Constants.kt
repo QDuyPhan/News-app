@@ -12,4 +12,6 @@ object Constants {
     const val NAME = "NAME"
     const val ROLE = "ROLE"
     const val TOKEN = "TOKEN"
+
+    const val DEFAULT_TIMEOUT = 30L
 }

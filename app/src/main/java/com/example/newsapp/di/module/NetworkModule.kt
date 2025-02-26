@@ -1,7 +1,9 @@
 package com.example.newsapp.di.module
 
 import com.example.newsapp.BuildConfig
+import com.example.newsapp.data.local.PreferenceRepository
 import com.example.newsapp.data.remote.service.NewsService
+import com.example.newsapp.utils.Constants.DEFAULT_TIMEOUT
 import com.example.newsapp.utils.Constants.NETWORK_TIMEOUT
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -9,11 +11,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 @Module
@@ -33,28 +37,40 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .build()
-    } else OkHttpClient
-        .Builder()
-        .build()
+    fun provideOkHttpClient(preferenceRepository: PreferenceRepository): OkHttpClient {
+        val builder = OkHttpClient.Builder()
+        val headerInterceptor = Interceptor { chain ->
+            val originalRequest = chain.request()
+            val newRequest = originalRequest
+                .newBuilder()
+                .addHeader(
+                    "Authorization", "Bearer ${preferenceRepository.getTokenKey()}"
+                )
+                .build()
+            chain.proceed(newRequest)
+        }
+        builder.addInterceptor(headerInterceptor)
+
+        if (BuildConfig.DEBUG) {
+            val loggingInterceptor = HttpLoggingInterceptor()
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS)
+            builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+            builder.readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+            builder.retryOnConnectionFailure(true)
+            builder.addInterceptor(loggingInterceptor)
+        }
+
+        return builder.build()
+    }
 
     @Provides
     @Singleton
     fun provideRetrofit(
-        baseUrl: String,
-        gson: Gson,
-        okHttpClient: OkHttpClient
+        baseUrl: String, gson: Gson, okHttpClient: OkHttpClient
     ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
+        return Retrofit.Builder().baseUrl(baseUrl).client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson)).build()
     }
 
 

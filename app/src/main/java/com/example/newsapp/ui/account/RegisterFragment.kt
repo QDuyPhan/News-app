@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.example.newsapp.R
 import com.example.newsapp.databinding.CustomDialogBinding
 import com.example.newsapp.databinding.FragmentRegisterBinding
 import com.example.newsapp.utils.Logger
@@ -46,6 +48,9 @@ class RegisterFragment : Fragment() {
                     viewModel.signup(name, username, password, email)
                     setupObserver()
                 }
+            }
+            txtLogin.setOnSingClickListener {
+                findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
             }
         }
 
