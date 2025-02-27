@@ -28,18 +28,18 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = MyFragmentAdapter(childFragmentManager, lifecycle)
-        binding.viewPager2.adapter = adapter
+//        binding.viewPager2.adapter = adapter
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab, pos ->
-            when (pos) {
-                0 -> {
-                    tab.text = "Đăng nhập"
-                }
-
-                1 -> {
-                    tab.text = "Đăng ký"
-                }
-            }
-        }.attach()
+//        TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab, pos ->
+//            when (pos) {
+//                0 -> {
+//                    tab.text = "Đăng nhập"
+//                }
+//
+//                1 -> {
+//                    tab.text = "Đăng ký"
+//                }
+//            }
+//        }.attach()
     }
 }

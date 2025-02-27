@@ -32,11 +32,11 @@ class AccountActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAccountBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         installSplashScreen().apply {
             setKeepOnScreenCondition {
                 !viewModel.isReady.value
             }
         }
-        setContentView(binding.root)
     }
 }

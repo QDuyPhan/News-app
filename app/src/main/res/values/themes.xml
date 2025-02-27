@@ -21,5 +21,14 @@
 
   <style name="Theme.Newsapp" parent="Base.Theme.Newsapp" />
 
+  <style name="BottomNavigationView.Active" parent="@style/TextAppearance.AppCompat.Caption">
+    <item name="android:textFontWeight" tools:targetApi="p">700</item>
+    <item name="android:textSize">10sp</item>
+  </style>
+
+  <style name="BottomNavigationView" parent="@style/TextAppearance.AppCompat.Caption">
+    <item name="android:textFontWeight" tools:targetApi="p">500</item>
+    <item name="android:textSize">10sp</item>
+  </style>
 
 </resources>

@@ -43,9 +43,9 @@ object NetworkModule {
             val originalRequest = chain.request()
             val newRequest = originalRequest
                 .newBuilder()
-                .addHeader(
-                    "Authorization", "Bearer ${preferenceRepository.getTokenKey()}"
-                )
+//                .addHeader(
+//                    "Authorization", "Bearer ${preferenceRepository.getTokenKey()}"
+//                )
                 .build()
             chain.proceed(newRequest)
         }

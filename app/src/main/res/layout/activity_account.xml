@@ -7,7 +7,7 @@
 
   </data>
 
-  <LinearLayout
+  <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/account_main"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -15,40 +15,18 @@
       android:orientation="vertical"
       tools:context=".ui.account.AccountActivity">
 
-    <!--    <com.google.android.material.tabs.TabLayout-->
-    <!--        android:id="@+id/tabLayout"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="50dp"-->
-    <!--        app:tabGravity="fill"-->
-    <!--        app:tabIndicator="@drawable/tab_indicator"-->
-    <!--        app:tabIndicatorAnimationMode="elastic"-->
-    <!--        app:tabIndicatorGravity="stretch"-->
-    <!--        app:tabMode="fixed"-->
-    <!--        app:tabSelectedTextColor="@color/white">-->
-
-    <!--      <com.google.android.material.tabs.TabItem-->
-    <!--          android:layout_width="wrap_content"-->
-    <!--          android:layout_height="wrap_content"-->
-    <!--          android:text="ĐĂNG NHẬP" />-->
-
-    <!--      <com.google.android.material.tabs.TabItem-->
-    <!--          android:layout_width="wrap_content"-->
-    <!--          android:layout_height="wrap_content"-->
-    <!--          android:text="ĐĂNG KÝ" />-->
-    <!--    </com.google.android.material.tabs.TabLayout>-->
-
-    <!--    <androidx.viewpager2.widget.ViewPager2-->
-    <!--        android:id="@+id/viewPager2"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent" />-->
-
     <fragment
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:defaultNavHost="true"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_main" />
 
-  </LinearLayout>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

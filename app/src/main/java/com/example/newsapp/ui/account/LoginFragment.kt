@@ -1,5 +1,6 @@
 package com.example.newsapp.ui.account
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,21 +11,25 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentLoginBinding
+import com.example.newsapp.ui.main.MainActivity
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Resource
 import com.example.newsapp.utils.Status
 import com.example.newsapp.utils.setOnSingClickListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private val viewModel by viewModels<LoginViewModel>()
+//    private val bottomNav: BottomNavigationView by lazy { requireActivity().findViewById(R.id.bottomNav) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
+//        bottomNav.visibility = View.VISIBLE
         return binding.root
     }
 
@@ -58,8 +63,8 @@ class LoginFragment : Fragment() {
             when (resource.status) {
                 Status.SUCCESS -> {
                     Logger.logI("Login Successfully")
-                    val navController = findNavController()
-                    navController.navigate(R.id.action_loginFragment_to_mainFragment)
+                    startActivity(Intent(requireContext(), MainActivity::class.java))
+                    requireActivity().finish()
                 }
 
                 Status.ERROR -> {
@@ -88,11 +93,11 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun loadFragment(fragmentReplace: Fragment) {
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.viewPager2, fragmentReplace)
-            .addToBackStack("HomeFragment")
-            .commit()
-    }
+//    private fun loadFragment(fragmentReplace: Fragment) {
+//        requireActivity().supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.viewPager2, fragmentReplace)
+//            .addToBackStack("HomeFragment")
+//            .commit()
+//    }
 }
