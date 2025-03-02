@@ -174,4 +174,5 @@ dependencies {
     // Splash Screen
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.material)
+    implementation(libs.circleimageview)
 }

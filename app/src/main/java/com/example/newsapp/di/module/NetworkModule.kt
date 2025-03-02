@@ -41,12 +41,13 @@ object NetworkModule {
         val builder = OkHttpClient.Builder()
         val headerInterceptor = Interceptor { chain ->
             val originalRequest = chain.request()
-            val newRequest = originalRequest
-                .newBuilder()
-//                .addHeader(
-//                    "Authorization", "Bearer ${preferenceRepository.getTokenKey()}"
-//                )
-                .build()
+            val loginAPI = originalRequest.url.encodedPath.contains("/api/auth/login")
+            val signupAPI = originalRequest.url.encodedPath.contains("/api/users")
+            if (loginAPI || signupAPI) return@Interceptor chain.proceed(originalRequest)
+
+            val newRequest = originalRequest.newBuilder().addHeader(
+                    "Authorization", "Bearer ${preferenceRepository.getTokenKey()}"
+                ).build()
             chain.proceed(newRequest)
         }
         builder.addInterceptor(headerInterceptor)

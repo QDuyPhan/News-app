@@ -2,6 +2,7 @@ package com.example.newsapp.ui.account
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.local.PreferenceRepository
 import com.example.newsapp.data.remote.NetworkHelper
 import com.example.newsapp.data.remote.NewsRepository
@@ -12,6 +13,7 @@ import com.example.newsapp.ui.base.BaseViewModel
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,36 +28,51 @@ class LoginViewModel @Inject constructor(
     private val _loginResult = MutableLiveData<Resource<ApiResponse<AuthenticationResponse>>>()
     val loginResult: LiveData<Resource<ApiResponse<AuthenticationResponse>>> get() = _loginResult
 
-    fun login(username: String, password: String) {
-        _loginResult.value = Resource.loading(null)
-        if (networkHelper.isNetworkConnected()) {
-            val call = newsRepository.login(LoginRequest(username, password))
-            call.enqueue(object : Callback<ApiResponse<AuthenticationResponse>> {
-                override fun onResponse(
-                    call: Call<ApiResponse<AuthenticationResponse>>,
-                    response: Response<ApiResponse<AuthenticationResponse>>
-                ) {
-                    val responseData = response.body()
-                    if (response.isSuccessful) {
-                        responseData?.let {
-                            Logger.logI("Response Data: ${it.result}")
-                            _loginResult.value = Resource.success(it)
-                            preferenceRepository.saveTokenKey(it.result.token)
-                        }
-                    } else {
-                        _loginResult.value = Resource.error(response.message(), null)
-                    }
-                }
+//    fun login(username: String, password: String) {
+//        _loginResult.value = Resource.loading(null)
+//        if (networkHelper.isNetworkConnected()) {
+//            val call = newsRepository.login(LoginRequest(username, password))
+//            call.enqueue(object : Callback<ApiResponse<AuthenticationResponse>> {
+//                override fun onResponse(
+//                    call: Call<ApiResponse<AuthenticationResponse>>,
+//                    response: Response<ApiResponse<AuthenticationResponse>>
+//                ) {
+//                    val responseData = response.body()
+//                    if (response.isSuccessful) {
+//                        responseData?.let {
+//                            Logger.logI("Response Data: ${it.result}")
+//                            _loginResult.value = Resource.success(it)
+//                        }
+//                    } else {
+//                        _loginResult.value = Resource.error(response.message(), null)
+//                    }
+//                }
+//
+//                override fun onFailure(
+//                    call: Call<ApiResponse<AuthenticationResponse>>, t: Throwable
+//                ) {
+//                    _loginResult.value = Resource.error(t.message.toString(), null)
+//                }
+//            })
+//        } else {
+//            _loginResult.value = Resource.error("No internet connection", null)
+//        }
+//    }
 
-                override fun onFailure(
-                    call: Call<ApiResponse<AuthenticationResponse>>, t: Throwable
-                ) {
-                    _loginResult.value = Resource.error(t.message.toString(), null)
+    fun login(username: String, password: String) {
+        viewModelScope.launch(exceptionHandler) {
+            _loginResult.postValue(Resource.loading(null))
+            if (networkHelper.isNetworkConnected()) {
+                val response = newsRepository.login(LoginRequest(username, password))
+                response.let {
+                    if (response.isSuccessful) {
+                        _loginResult.postValue(Resource.success(it.body()))
+                        it.body()?.result?.token?.let { it1 -> preferenceRepository.saveTokenKey(it1) }
+                    } else _loginResult.postValue(Resource.error(it.message().toString(), null))
                 }
-            })
-        } else {
-            _loginResult.value = Resource.error("No internet connection", null)
+            } else _loginResult.postValue(Resource.error("No internet connection", null))
         }
+
     }
 
 }

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+  <androidx.cardview.widget.CardView
+      android:id="@+id/cv"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="10dp"
+      app:cardCornerRadius="@dimen/_10sdp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent">
+
+    <ImageView
+        android:id="@+id/imgNews"
+        android:layout_width="120dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder" />
+  </androidx.cardview.widget.CardView>
+
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="match_parent"
+      android:layout_marginLeft="@dimen/_10sdp"
+      android:orientation="vertical"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/cv"
+      app:layout_constraintTop_toTopOf="@+id/cv">
+
+    <TextView
+        android:id="@+id/txtNewsTitle"
+        style="@style/TitleTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lines="3"
+        android:text="Đây là tiêu đề bài viết." />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
+
+      <TextView
+          android:id="@+id/txtNewsPublished"
+          style="@style/SubTitleTextStyle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:drawablePadding="4dp"
+          android:drawableTint="@color/gold"
+          android:maxLength="11"
+          android:text="4 hr"
+          app:drawableLeftCompat="@drawable/baseline_access_time_24" />
+
+      <View
+          android:layout_width="1dp"
+          android:layout_height="20dp"
+          android:layout_gravity="center_vertical"
+          android:layout_marginStart="8dp"
+          android:layout_marginEnd="8dp"
+          android:background="@color/gold" />
+
+      <TextView
+          android:id="@+id/txtNewsSource"
+          style="@style/SubTitleTextStyle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="VnExpress" />
+
+    </LinearLayout>
+  </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
