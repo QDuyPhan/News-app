@@ -99,7 +99,6 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                 Status.SUCCESS -> {
                     resource.data?.let { data ->
                         listCategories = data.result.map { it.description }
-                        Logger.logI("description: ${listCategories}")
                         initTabLayoutAndViewPager()
                     }
                 }

@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var dialog: AlertDialog
-    private val viewModel by viewModels<RegisterViewModel>()
+    private val viewModel by viewModels<AccountViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

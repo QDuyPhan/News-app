@@ -24,7 +24,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
-    private val viewModel by viewModels<LoginViewModel>()
+    private val viewModel by viewModels<AccountViewModel>()
 
     @Inject
     lateinit var preferenceRepository: PreferenceRepository

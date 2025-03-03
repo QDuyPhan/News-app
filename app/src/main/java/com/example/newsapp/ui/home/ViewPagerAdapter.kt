@@ -13,7 +13,6 @@ class ViewPagerAdapter(
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun createFragment(position: Int): Fragment {
         return NewsFragment()
-
     }
 
     override fun getItemCount(): Int {

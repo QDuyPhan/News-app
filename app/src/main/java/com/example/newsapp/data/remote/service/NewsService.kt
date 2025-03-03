@@ -13,16 +13,10 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface NewsService {
-//    @POST("/api/auth/login")
-//    fun login(
-//        @Body loginRequest: LoginRequest
-//    ): Call<ApiResponse<AuthenticationResponse>>
-
     @POST("/api/auth/login")
     suspend fun login(
         @Body loginRequest: LoginRequest
     ): Response<ApiResponse<AuthenticationResponse>>
-
 
     @POST("/api/users")
     fun signup(
