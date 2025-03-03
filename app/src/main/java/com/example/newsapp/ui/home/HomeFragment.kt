@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.example.newsapp.R
+import com.example.newsapp.adapter.ViewPagerAdapter
+import com.example.newsapp.data.response.CategoryResponse
 import com.example.newsapp.databinding.FragmentHomeBinding
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
@@ -31,7 +33,8 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager2: ViewPager2
     private lateinit var adapter: ViewPagerAdapter
-    private var listCategories: List<String> = emptyList()
+    private var listDescription: List<String> = emptyList()
+    private var listCategory: List<CategoryResponse> = emptyList()
     private val viewModel by viewModels<HomeViewModel>()
 
     override fun onCreateView(
@@ -98,7 +101,9 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             when (resource.status) {
                 Status.SUCCESS -> {
                     resource.data?.let { data ->
-                        listCategories = data.result.map { it.description }
+                        listDescription = data.result.map { it.description }
+                        listCategory = data.result
+                        Logger.logI("listCategory: ${listCategory}")
                         initTabLayoutAndViewPager()
                     }
                 }
@@ -117,12 +122,12 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     private fun initTabLayoutAndViewPager() {
         val fragmentManager: FragmentManager = childFragmentManager
-        adapter = ViewPagerAdapter(fragmentManager, lifecycle, listCategories)
+        adapter = ViewPagerAdapter(fragmentManager, lifecycle, listDescription, listCategory)
         viewPager2.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
             tab.text =
-                (if (position < listCategories.size) listCategories[position] else getString(R.string.pho_bien))
+                (if (position < listDescription.size) listDescription[position] else getString(R.string.pho_bien))
         }.attach()
     }
 

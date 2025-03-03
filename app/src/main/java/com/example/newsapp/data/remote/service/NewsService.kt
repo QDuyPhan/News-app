@@ -5,12 +5,14 @@ import com.example.newsapp.data.request.SignupRequest
 import com.example.newsapp.data.response.ApiResponse
 import com.example.newsapp.data.response.AuthenticationResponse
 import com.example.newsapp.data.response.CategoryResponse
+import com.example.newsapp.data.response.NewsResponse
 import com.example.newsapp.data.response.UserResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface NewsService {
     @POST("/api/auth/login")
@@ -25,4 +27,7 @@ interface NewsService {
 
     @GET("/api/category")
     suspend fun getCategories(): Response<ApiResponse<List<CategoryResponse>>>
+
+    @GET("/api/news/{categoryName}")
+    suspend fun getNewsByCategory(@Path("categoryName") categoryName: String): Response<ApiResponse<List<NewsResponse>>>
 }

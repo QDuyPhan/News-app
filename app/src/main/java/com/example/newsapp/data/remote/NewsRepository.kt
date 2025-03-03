@@ -7,6 +7,7 @@ import com.example.newsapp.data.response.AuthenticationResponse
 import com.example.newsapp.data.response.UserResponse
 import com.example.newsapp.data.remote.service.NewsService
 import com.example.newsapp.data.response.CategoryResponse
+import com.example.newsapp.data.response.NewsResponse
 import com.example.newsapp.utils.IODispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -31,5 +32,11 @@ class NewsRepository @Inject constructor(
         withContext(dispatcher)
         {
             newsService.getCategories()
+        }
+
+    suspend fun getNewsByCategory(categoryName: String): Response<ApiResponse<List<NewsResponse>>> =
+        withContext(dispatcher)
+        {
+            newsService.getNewsByCategory(categoryName)
         }
 }
