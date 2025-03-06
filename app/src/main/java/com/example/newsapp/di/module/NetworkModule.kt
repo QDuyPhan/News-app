@@ -5,6 +5,7 @@ import com.example.newsapp.data.local.PreferenceRepository
 import com.example.newsapp.data.remote.service.NewsService
 import com.example.newsapp.utils.Constants.DEFAULT_TIMEOUT
 import com.example.newsapp.utils.Constants.NETWORK_TIMEOUT
+import com.example.newsapp.utils.LocalDateTimeDeserializer
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -17,6 +18,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
 
 
@@ -33,7 +35,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideGson(): Gson = GsonBuilder().setLenient().create()
+    fun provideGson(): Gson = GsonBuilder()
+        .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
+        .setLenient()
+        .create()
 
     @Provides
     @Singleton
@@ -46,8 +51,8 @@ object NetworkModule {
             if (loginAPI || signupAPI) return@Interceptor chain.proceed(originalRequest)
 
             val newRequest = originalRequest.newBuilder().addHeader(
-                    "Authorization", "Bearer ${preferenceRepository.getTokenKey()}"
-                ).build()
+                "Authorization", "Bearer ${preferenceRepository.getTokenKey()}"
+            ).build()
             chain.proceed(newRequest)
         }
         builder.addInterceptor(headerInterceptor)

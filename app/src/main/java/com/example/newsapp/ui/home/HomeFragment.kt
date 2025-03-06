@@ -33,8 +33,7 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager2: ViewPager2
     private lateinit var adapter: ViewPagerAdapter
-    private var listDescription: List<String> = emptyList()
-    private var listCategory: List<CategoryResponse> = emptyList()
+    private var listCategory: List<CategoryResponse>? = null
     private val viewModel by viewModels<HomeViewModel>()
 
     override fun onCreateView(
@@ -46,11 +45,7 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             navView = binding.navView
             val toolbar = binding.toolbar
             val toggle = ActionBarDrawerToggle(
-                requireActivity(),
-                drawerLayout,
-                toolbar,
-                R.string.open_nav,
-                R.string.close_nav
+                requireActivity(), drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
             )
             (activity as AppCompatActivity).setSupportActionBar(toolbar)
             navView.setNavigationItemSelectedListener(this)
@@ -59,6 +54,7 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             tabLayout = binding.tabLayout
             viewPager2 = binding.viewPager2
             setupObserver()
+
         } catch (e: Exception) {
             Logger.logE("HomeFragment: Lỗi: ${e.message.toString()}")
         }
@@ -80,8 +76,7 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             }
 
             R.id.nav_approve -> {
-                Toast.makeText(requireContext(), "Phê duyệt tin tức", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(requireContext(), "Phê duyệt tin tức", Toast.LENGTH_SHORT).show()
             }
 
             R.id.nav_role -> {
@@ -97,15 +92,22 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     }
 
     private fun setupObserver() {
-        viewModel.listNews.observe(viewLifecycleOwner) { resource ->
+        viewModel.listCategory.observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.SUCCESS -> {
                     resource.data?.let { data ->
-                        listDescription = data.result.map { it.description }
                         listCategory = data.result
-                        Logger.logI("listCategory: ${listCategory}")
-                        initTabLayoutAndViewPager()
                     }
+                    val fragmentManager: FragmentManager = childFragmentManager
+                    adapter = ViewPagerAdapter(fragmentManager, lifecycle, listCategory)
+                    viewPager2.adapter = adapter
+
+                    TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
+                        Logger.logI("Name description: ${listCategory?.get(position)?.description}")
+                        tab.text =
+                            (if (position < listCategory?.size!!) listCategory?.get(position)?.description else null)
+
+                    }.attach()
                 }
 
                 Status.ERROR -> {
@@ -119,16 +121,4 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             }
         }
     }
-
-    private fun initTabLayoutAndViewPager() {
-        val fragmentManager: FragmentManager = childFragmentManager
-        adapter = ViewPagerAdapter(fragmentManager, lifecycle, listDescription, listCategory)
-        viewPager2.adapter = adapter
-
-        TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-            tab.text =
-                (if (position < listDescription.size) listDescription[position] else getString(R.string.pho_bien))
-        }.attach()
-    }
-
 }

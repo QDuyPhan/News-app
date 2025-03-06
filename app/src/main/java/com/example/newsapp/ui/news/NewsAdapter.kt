@@ -1,22 +1,31 @@
 package com.example.newsapp.ui.news
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newsapp.data.response.NewsResponse
 import com.example.newsapp.databinding.ItemNewsBinding
+import java.time.format.TextStyle
+import java.util.Locale
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
-    var list: List<NewsResponse> = emptyList()
+class NewsAdapter(
+    private var news: List<NewsResponse>
+) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemNewsBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(item: NewsResponse) {
             binding.apply {
+                val dayOfWeek =
+                    item.publishedAt.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
+                val day = item.publishedAt.dayOfMonth
+                val month = item.publishedAt.month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH)
                 Glide.with(itemView.context).load(item.image).into(imgNews)
                 txtNewsTitle.text = item.title
-                txtNewsPublished.text = item.publishedAt.toString()
+                txtNewsPublished.text = "$dayOfWeek, $day $month"
             }
         }
     }
@@ -27,10 +36,15 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return news.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(news[position])
+    }
+
+    fun addData(list: List<NewsResponse>) {
+        news = list
+        notifyDataSetChanged()
     }
 }

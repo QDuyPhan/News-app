@@ -7,9 +7,12 @@ import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivityMainBinding
 import com.example.newsapp.ui.category.CategoryFragment
 import com.example.newsapp.ui.home.HomeFragment
+import com.example.newsapp.ui.news.NewsFragment
 import com.example.newsapp.ui.profile.ProfileFragment
 import com.example.newsapp.ui.saved.SavedFragment
 import com.example.newsapp.ui.search.SearchFragment
+import com.example.newsapp.ui.summary.SummaryFragment
+import com.example.newsapp.utils.Constants.THOI_SU
 import com.example.newsapp.utils.Logger
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,8 +39,8 @@ class MainActivity : AppCompatActivity() {
                         loadFragment(HomeFragment())
                     }
 
-                    R.id.categoryFragment -> {
-                        loadFragment(CategoryFragment())
+                    R.id.summaryFragment -> {
+                        loadFragment(NewsFragment(THOI_SU))
                     }
 
                     R.id.savedFragment -> {

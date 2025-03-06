@@ -34,7 +34,7 @@ class NewsRepository @Inject constructor(
             newsService.getCategories()
         }
 
-    suspend fun getNewsByCategory(categoryName: String): Response<ApiResponse<List<NewsResponse>>> =
+    suspend fun getNewsByCategory(categoryName: String?): Response<ApiResponse<List<NewsResponse>>> =
         withContext(dispatcher)
         {
             newsService.getNewsByCategory(categoryName)

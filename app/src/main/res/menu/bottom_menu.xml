@@ -5,7 +5,7 @@
       android:icon="@drawable/home"
       android:title="Trang chủ" />
   <item
-      android:id="@+id/categoryFragment"
+      android:id="@+id/summaryFragment"
       android:icon="@drawable/category"
       android:title="Tổng hợp" />
   <item

@@ -8,18 +8,24 @@
   <string name="close_nav">Close Navigation Drawer</string>
 
 
-  <string name="pho_bien">Phổ Biến</string>
-  <string name="noi_bat">Nổi Bật</string>
-  <string name="moi_nhat">Mới Nhất</string>
-  <string name="the_gioi">Thế Giới</string>
-  <string name="the_thao">Thể Thao</string>
-  <string name="phap_luat">Pháp Luật</string>
-  <string name="giao_duc">Giáo Dục</string>
-  <string name="suc_khoe">Sức Khoẻ</string>
-  <string name="doi_song">Đời Sống</string>
-  <string name="khoa_hoc">Khoa Học</string>
-  <string name="kinh_doanh">Kinh Doanh</string>
-  <string name="tam_su">Tâm Sự</string>
-  <string name="so_hoa">Số Hoá</string>
-  <string name="du_lich">Du Lịch</string>
+  <string name="BAT_DONG_SAN">Bất động sản</string>
+  <string name="CONG_NGHE">Công nghệ</string>
+  <string name="DOI_SONG">Đời sống</string>
+  <string name="DU_LICH">Du lịch</string>
+  <string name="GIAI_TRI">Giải trí</string>
+  <string name="GIAO_DUC">Giáo dục</string>
+  <string name="GOC_NHIN">Góc nhìn</string>
+  <string name="KHOA_HOC">Khoa học</string>
+  <string name="KINH_DOANH">Kinh doanh</string>
+  <string name="PHAP_LUAT">Pháp luật</string>
+  <string name="PODCASTS">Podcasts</string>
+  <string name="SUC_KHOE">Sức khỏe</string>
+  <string name="TAM_SU">Tâm sự</string>
+  <string name="THE_GIOI">Thế giới</string>
+  <string name="THE_THAO">Thể thao</string>
+  <string name="THOI_SU">Thời sự</string>
+  <string name="THU_GIAN">Thư giản</string>
+  <string name="VIDEO">Video</string>
+  <string name="XE">Xe</string>
+  <string name="Y_KIEN">Ý kiến</string>
 </resources>
