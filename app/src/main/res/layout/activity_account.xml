@@ -23,6 +23,20 @@
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_main" />
 
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:id="@+id/bottomNav"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="@drawable/bottom_nav_background"-->
+<!--        app:itemIconTint="@color/lavender"-->
+<!--        app:itemPaddingBottom="11dp"-->
+<!--        app:itemPaddingTop="11dp"-->
+<!--        app:itemRippleColor="@null"-->
+<!--        app:itemTextAppearanceActive="@style/BottomNavigationView.Active"-->
+<!--        app:itemTextAppearanceInactive="@style/BottomNavigationView"-->
+<!--        app:itemTextColor="@color/lavender"-->
+<!--        app:labelVisibilityMode="selected"-->
+<!--        app:menu="@menu/bottom_menu" />-->
 
   </LinearLayout>
 </layout>

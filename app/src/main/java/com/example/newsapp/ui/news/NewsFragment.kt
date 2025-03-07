@@ -29,7 +29,7 @@ class NewsFragment(private val categoryName: String?) : Fragment() {
         binding = FragmentNewsBinding.inflate(layoutInflater)
         setupUI()
         setupObserver()
-        setOnClickNews()
+//        setOnClickNews()
         return binding.root
     }
 
