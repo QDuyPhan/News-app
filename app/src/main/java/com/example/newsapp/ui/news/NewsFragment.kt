@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.newsapp.R
 import com.example.newsapp.data.response.NewsResponse
 import com.example.newsapp.databinding.FragmentNewsBinding
 import com.example.newsapp.utils.Logger
@@ -27,6 +29,7 @@ class NewsFragment(private val categoryName: String?) : Fragment() {
         binding = FragmentNewsBinding.inflate(layoutInflater)
         setupUI()
         setupObserver()
+        setOnClickNews()
         return binding.root
     }
 
@@ -56,6 +59,15 @@ class NewsFragment(private val categoryName: String?) : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun setOnClickNews() {
+        adapter.setOnItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("article", it)
+            }
+            findNavController().navigate(R.id.action_newsFragment_to_articlesFragment)
         }
     }
 }

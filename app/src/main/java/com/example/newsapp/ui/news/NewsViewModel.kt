@@ -29,8 +29,6 @@ class NewsViewModel @Inject constructor(
             _newsResult.postValue(Resource.loading(null))
             if (networkHelper.isNetworkConnected()) {
                 val response = newsRepository.getNewsByCategory(categoryName)
-                Logger.logI("response: $response")
-                Logger.logI("response body: ${response.body()}")
                 response.let {
                     if (response.isSuccessful) {
                         _newsResult.postValue(Resource.success(it.body()))

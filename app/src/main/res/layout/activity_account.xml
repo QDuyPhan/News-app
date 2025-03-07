@@ -7,7 +7,7 @@
 
   </data>
 
-  <androidx.constraintlayout.widget.ConstraintLayout
+  <LinearLayout
       android:id="@+id/account_main"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -21,12 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_main" />
 
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  </LinearLayout>
 </layout>

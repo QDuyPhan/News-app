@@ -1,6 +1,7 @@
 package com.example.newsapp.data.response
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 import java.time.LocalDateTime
 
 data class NewsResponse(
@@ -12,4 +13,4 @@ data class NewsResponse(
     @SerializedName("created_at") val createdAt: LocalDateTime,
     @SerializedName("updated_at") val updatedAt: LocalDateTime,
     @SerializedName("categories") val categories: Set<CategoryResponse>
-)
+) : Serializable

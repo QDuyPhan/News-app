@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.newsapp.data.response.NewsResponse
 import com.example.newsapp.databinding.ItemNewsBinding
+import com.example.newsapp.utils.setOnSingClickListener
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -26,6 +27,12 @@ class NewsAdapter(
                 Glide.with(itemView.context).load(item.image).into(imgNews)
                 txtNewsTitle.text = item.title
                 txtNewsPublished.text = "$dayOfWeek, $day $month"
+
+                root.setOnSingClickListener {
+                    onItemClickListener?.let {
+                        it(item)
+                    }
+                }
             }
         }
     }
@@ -41,6 +48,11 @@ class NewsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(news[position])
+    }
+
+    private var onItemClickListener: ((NewsResponse) -> Unit)? = null
+    fun setOnItemClickListener(listener: (NewsResponse) -> Unit) {
+        onItemClickListener = listener
     }
 
     fun addData(list: List<NewsResponse>) {

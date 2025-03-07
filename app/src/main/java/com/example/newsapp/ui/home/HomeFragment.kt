@@ -41,24 +41,28 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     ): View {
         try {
             binding = FragmentHomeBinding.inflate(inflater, container, false)
-            drawerLayout = binding.drawerLayout
-            navView = binding.navView
-            val toolbar = binding.toolbar
-            val toggle = ActionBarDrawerToggle(
-                requireActivity(), drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
-            )
-            (activity as AppCompatActivity).setSupportActionBar(toolbar)
-            navView.setNavigationItemSelectedListener(this)
-            drawerLayout.addDrawerListener(toggle)
-            toggle.syncState()
-            tabLayout = binding.tabLayout
-            viewPager2 = binding.viewPager2
+            setUpUI()
             setupObserver()
 
         } catch (e: Exception) {
             Logger.logE("HomeFragment: Lỗi: ${e.message.toString()}")
         }
         return binding.root
+    }
+
+    private fun setUpUI() {
+        drawerLayout = binding.drawerLayout
+        navView = binding.navView
+        val toolbar = binding.toolbar
+        val toggle = ActionBarDrawerToggle(
+            requireActivity(), drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
+        )
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        navView.setNavigationItemSelectedListener(this)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+        tabLayout = binding.tabLayout
+        viewPager2 = binding.viewPager2
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
