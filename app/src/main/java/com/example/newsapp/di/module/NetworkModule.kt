@@ -44,26 +44,29 @@ object NetworkModule {
     @Singleton
     fun provideOkHttpClient(preferenceRepository: PreferenceRepository): OkHttpClient {
         val builder = OkHttpClient.Builder()
+
         val headerInterceptor = Interceptor { chain ->
             val originalRequest = chain.request()
+
             val loginAPI = originalRequest.url.encodedPath.contains("/api/auth/login")
             val signupAPI = originalRequest.url.encodedPath.contains("/api/users")
+
             if (loginAPI || signupAPI) return@Interceptor chain.proceed(originalRequest)
 
-            val newRequest = originalRequest.newBuilder().addHeader(
-                "Authorization", "Bearer ${preferenceRepository.getTokenKey()}"
-            ).build()
+            val token = preferenceRepository.getTokenKey()
+
+            val newRequest = originalRequest.newBuilder()
+                .addHeader("Authorization", "Bearer $token")
+                .build()
+
             chain.proceed(newRequest)
         }
+
         builder.addInterceptor(headerInterceptor)
 
         if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor()
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS)
-            builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-            builder.readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-            builder.retryOnConnectionFailure(true)
             builder.addInterceptor(loggingInterceptor)
         }
 

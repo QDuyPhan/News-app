@@ -41,7 +41,7 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     ): View {
         try {
             binding = FragmentHomeBinding.inflate(inflater, container, false)
-            setUpUI()
+//            setUpUI()
             setupObserver()
 
         } catch (e: Exception) {
@@ -50,20 +50,20 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         return binding.root
     }
 
-    private fun setUpUI() {
-        drawerLayout = binding.drawerLayout
-        navView = binding.navView
-        val toolbar = binding.toolbar
-        val toggle = ActionBarDrawerToggle(
-            requireActivity(), drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
-        )
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        navView.setNavigationItemSelectedListener(this)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-        tabLayout = binding.tabLayout
-        viewPager2 = binding.viewPager2
-    }
+//    private fun setUpUI() {
+//        drawerLayout = binding.drawerLayout
+//        navView = binding.navView
+//        val toolbar = binding.toolbar
+//        val toggle = ActionBarDrawerToggle(
+//            requireActivity(), drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
+//        )
+//        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+//        navView.setNavigationItemSelectedListener(this)
+//        drawerLayout.addDrawerListener(toggle)
+//        toggle.syncState()
+//        tabLayout = binding.tabLayout
+//        viewPager2 = binding.viewPager2
+//    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -107,7 +107,6 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                     viewPager2.adapter = adapter
 
                     TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-                        Logger.logI("Name description: ${listCategory?.get(position)?.description}")
                         tab.text =
                             (if (position < listCategory?.size!!) listCategory?.get(position)?.description else null)
 

@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.splash.SplashFragment">
 
-  <data>
-
-  </data>
-
-  <FrameLayout
+  <TextView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@drawable/background_splashscreen"
-      tools:context=".ui.splash.SplashFragment">
+      android:text="Hello" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Splash Screen"
-        android:textColor="@color/white2"
-        android:textSize="@dimen/_30sdp" />
-
-  </FrameLayout>
-</layout>
+</FrameLayout>

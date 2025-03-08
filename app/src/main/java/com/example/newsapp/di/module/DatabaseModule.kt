@@ -15,12 +15,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    }
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(
-        @ApplicationContext context: Context
-    ): SharedPreferences {
-        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    fun providePreferenceRepository(sharedPreferences: SharedPreferences): PreferenceRepository {
+        return PreferenceRepository(sharedPreferences)
     }
 }

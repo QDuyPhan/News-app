@@ -5,16 +5,14 @@
     android:layout_height="wrap_content"
     android:background="@color/lavender"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/_10sdp"
-    android:paddingTop="@dimen/_20sdp"
-    android:paddingEnd="@dimen/_10sdp"
-    android:paddingBottom="@dimen/_20sdp">
+    android:padding="@dimen/_10sdp">
 
   <de.hdodenhof.circleimageview.CircleImageView
       android:id="@+id/img_avatar"
-      android:layout_width="@dimen/_80sdp"
-      android:layout_height="@dimen/_80sdp"
-      android:layout_marginRight="@dimen/_10sdp"
+      android:layout_width="@dimen/_50sdp"
+      android:layout_height="@dimen/_50sdp"
+      android:layout_marginEnd="@dimen/_10sdp"
+      android:scaleType="centerCrop"
       android:src="@drawable/online"
       tools:ignore="MissingClass" />
 
@@ -37,10 +35,9 @@
         android:id="@+id/tv_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:text="youremail@gmail.com"
         android:textColor="#000000"
-        android:textSize="@dimen/_14sdp" />
+        android:textSize="@dimen/_12sdp" />
   </LinearLayout>
 
 </LinearLayout>

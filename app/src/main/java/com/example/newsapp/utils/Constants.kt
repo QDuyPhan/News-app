@@ -12,6 +12,10 @@ object Constants {
     const val NAME = "NAME"
     const val ROLE = "ROLE"
     const val TOKEN = "TOKEN"
+    const val IS_LOGIN = "TOKEN"
+
+    const val ACTIVATE = "Active"
+    const val UNACTIVATE = "UnActive"
 
     const val DEFAULT_TIMEOUT = 30L
 

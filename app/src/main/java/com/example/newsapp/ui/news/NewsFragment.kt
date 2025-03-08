@@ -18,10 +18,28 @@ import com.example.newsapp.utils.Logger
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class NewsFragment(private val categoryName: String?) : Fragment() {
+class NewsFragment : Fragment() {
     private lateinit var binding: FragmentNewsBinding
     private val viewModel by viewModels<NewsViewModel>()
     private lateinit var adapter: NewsAdapter
+    private var categoryName: String? = null
+
+    companion object {
+        fun newInstance(categoryName: String): NewsFragment {
+            val fragment = NewsFragment()
+            val args = Bundle()
+            args.putString("category_name", categoryName)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            categoryName = it.getString("category_name")  // Nhận giá trị từ Bundle
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -29,7 +47,7 @@ class NewsFragment(private val categoryName: String?) : Fragment() {
         binding = FragmentNewsBinding.inflate(layoutInflater)
         setupUI()
         setupObserver()
-//        setOnClickNews()
+        setOnClickNews()
         return binding.root
     }
 
@@ -67,7 +85,7 @@ class NewsFragment(private val categoryName: String?) : Fragment() {
             val bundle = Bundle().apply {
                 putSerializable("article", it)
             }
-            findNavController().navigate(R.id.action_newsFragment_to_articlesFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_articlesFragment)
         }
     }
 }

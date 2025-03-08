@@ -15,6 +15,9 @@ import com.example.newsapp.ui.base.BaseViewModel
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import retrofit2.Call
@@ -33,6 +36,41 @@ class AccountViewModel @Inject constructor(
     private val _loginResult = MutableLiveData<Resource<ApiResponse<AuthenticationResponse>>>()
     val loginResult: LiveData<Resource<ApiResponse<AuthenticationResponse>>> get() = _loginResult
 
+    private val _isReady = MutableStateFlow(false)
+    val isReady = _isReady.asStateFlow()
+
+    init {
+        viewModelScope.launch(exceptionHandler + Dispatchers.Main) {
+            _isReady.value = true
+        }
+    }
+
+    fun isLogin(): String? {
+        return preferenceRepository.isUserLoggedIn()
+    }
+
+    fun saveLoginState(value: String) {
+        preferenceRepository.saveUserLoginStatus(value)
+    }
+
+    fun saveToken(token: String) {
+        preferenceRepository.saveTokenKey(token)
+    }
+
+    fun login(username: String, password: String) {
+        viewModelScope.launch(exceptionHandler) {
+            _loginResult.postValue(Resource.loading(null))
+            if (networkHelper.isNetworkConnected()) {
+                val response = newsRepository.login(LoginRequest(username, password))
+                response.let {
+                    if (response.isSuccessful) {
+                        _loginResult.postValue(Resource.success(it.body()))
+                    } else _loginResult.postValue(Resource.error(it.message().toString(), null))
+                }
+            } else _loginResult.postValue(Resource.error("No internet connection", null))
+        }
+    }
+
     fun signup(name: String, username: String, password: String, email: String) {
         _signupResult.value = Resource.loading(null)
         if (networkHelper.isNetworkConnected()) {
@@ -44,7 +82,6 @@ class AccountViewModel @Inject constructor(
                 ) {
                     if (response.isSuccessful) {
                         val apiResponse = response.body()
-                        Logger.logI("API Response: $apiResponse")
                         apiResponse?.let {
                             _signupResult.value = Resource.success(apiResponse)
                         }
@@ -63,18 +100,4 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun login(username: String, password: String) {
-        viewModelScope.launch(exceptionHandler) {
-            _loginResult.postValue(Resource.loading(null))
-            if (networkHelper.isNetworkConnected()) {
-                val response = newsRepository.login(LoginRequest(username, password))
-                response.let {
-                    if (response.isSuccessful) {
-                        _loginResult.postValue(Resource.success(it.body()))
-                        it.body()?.result?.token?.let { it1 -> preferenceRepository.saveTokenKey(it1) }
-                    } else _loginResult.postValue(Resource.error(it.message().toString(), null))
-                }
-            } else _loginResult.postValue(Resource.error("No internet connection", null))
-        }
-    }
 }

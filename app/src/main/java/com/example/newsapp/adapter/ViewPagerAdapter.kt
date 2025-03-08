@@ -34,7 +34,8 @@ class ViewPagerAdapter(
     private val listCategory: List<CategoryResponse>? = null
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun createFragment(position: Int): Fragment {
-        return NewsFragment(listCategory?.get(position)?.name)
+        val categoryName = listCategory?.get(position)?.name ?: ""
+        return NewsFragment.newInstance(categoryName)
     }
 
     override fun getItemCount(): Int {

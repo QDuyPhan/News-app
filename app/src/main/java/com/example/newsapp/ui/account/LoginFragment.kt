@@ -13,6 +13,7 @@ import com.example.newsapp.R
 import com.example.newsapp.data.local.PreferenceRepository
 import com.example.newsapp.databinding.FragmentLoginBinding
 import com.example.newsapp.ui.main.MainActivity
+import com.example.newsapp.utils.Constants.ACTIVATE
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Resource
 import com.example.newsapp.utils.Status
@@ -25,9 +26,6 @@ import javax.inject.Inject
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     private val viewModel by viewModels<AccountViewModel>()
-
-    @Inject
-    lateinit var preferenceRepository: PreferenceRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -65,9 +63,13 @@ class LoginFragment : Fragment() {
         viewModel.loginResult.observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.SUCCESS -> {
-                    Logger.logI("Login Successfully")
-                    startActivity(Intent(requireContext(), MainActivity::class.java))
-                    requireActivity().finish()
+//                    viewModel.saveLoginState(ACTIVATE)
+//                    Logger.logI("isLogin: ${viewModel.isLogin()}")
+                    resource.data?.let {
+                        viewModel.saveToken(it.result.token)
+                    }
+                    val navController = findNavController()
+                    navController.navigate(R.id.action_loginFragment_to_homeFragment)
                 }
 
                 Status.ERROR -> {
