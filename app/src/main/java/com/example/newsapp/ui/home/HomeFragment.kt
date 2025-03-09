@@ -13,7 +13,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.widget.ViewPager2
 import com.example.newsapp.R
 import com.example.newsapp.adapter.ViewPagerAdapter
 import com.example.newsapp.data.response.CategoryResponse
@@ -21,17 +20,13 @@ import com.example.newsapp.databinding.FragmentHomeBinding
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
-    private lateinit var binding: FragmentHomeBinding
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navView: NavigationView
-    private lateinit var tabLayout: TabLayout
-    private lateinit var viewPager2: ViewPager2
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private lateinit var adapter: ViewPagerAdapter
     private var listCategory: List<CategoryResponse>? = null
     private val viewModel by viewModels<HomeViewModel>()
@@ -39,31 +34,75 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        try {
-            binding = FragmentHomeBinding.inflate(inflater, container, false)
-//            setUpUI()
-            setupObserver()
-
-        } catch (e: Exception) {
-            Logger.logE("HomeFragment: Lỗi: ${e.message.toString()}")
-        }
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-//    private fun setUpUI() {
-//        drawerLayout = binding.drawerLayout
-//        navView = binding.navView
-//        val toolbar = binding.toolbar
-//        val toggle = ActionBarDrawerToggle(
-//            requireActivity(), drawerLayout, toolbar, R.string.open_nav, R.string.close_nav
-//        )
-//        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-//        navView.setNavigationItemSelectedListener(this)
-//        drawerLayout.addDrawerListener(toggle)
-//        toggle.syncState()
-//        tabLayout = binding.tabLayout
-//        viewPager2 = binding.viewPager2
-//    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        binding.homeFragment.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+        val toggle = ActionBarDrawerToggle(
+            requireActivity(), binding.homeFragment, binding.toolbar,
+            R.string.open_nav, R.string.close_nav
+        )
+        binding.homeFragment.addDrawerListener(toggle)
+        toggle.syncState()
+        onItemClickMenu()
+        setupObserver()
+    }
+
+    private fun setupObserver() {
+        viewModel.listCategory.observe(viewLifecycleOwner) { resource ->
+            when (resource.status) {
+                Status.SUCCESS -> {
+                    resource.data?.let { data ->
+                        listCategory = data.result
+                    }
+                    val fragmentManager: FragmentManager = childFragmentManager
+                    adapter = ViewPagerAdapter(fragmentManager, lifecycle, listCategory)
+                    binding.viewPager2.adapter = adapter
+
+                    TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab, position ->
+                        tab.text =
+                            (if (position < listCategory?.size!!) listCategory?.get(position)?.description else null)
+
+                    }.attach()
+                }
+
+                Status.ERROR -> {
+                    val error = resource.message ?: "Unknown error"
+                    Logger.logE(error)
+                }
+
+                Status.LOADING -> {
+                    Logger.logI("Loading...")
+                }
+            }
+        }
+    }
+
+    private fun onItemClickMenu() {
+        binding.navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_home -> {
+                    Toast.makeText(requireContext(), "Trang chủ", Toast.LENGTH_SHORT).show()
+                }
+
+                R.id.nav_logout -> {
+                    Toast.makeText(requireContext(), "Đăng xuất", Toast.LENGTH_SHORT).show()
+                }
+            }
+            binding.homeFragment.closeDrawer(GravityCompat.START)
+            true
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -91,37 +130,7 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
                 Toast.makeText(requireContext(), "Đăng xuất", Toast.LENGTH_SHORT).show()
             }
         }
-        drawerLayout.closeDrawer(GravityCompat.START)
+        binding.homeFragment.closeDrawer(GravityCompat.START)
         return true
-    }
-
-    private fun setupObserver() {
-        viewModel.listCategory.observe(viewLifecycleOwner) { resource ->
-            when (resource.status) {
-                Status.SUCCESS -> {
-                    resource.data?.let { data ->
-                        listCategory = data.result
-                    }
-                    val fragmentManager: FragmentManager = childFragmentManager
-                    adapter = ViewPagerAdapter(fragmentManager, lifecycle, listCategory)
-                    viewPager2.adapter = adapter
-
-                    TabLayoutMediator(tabLayout, viewPager2) { tab, position ->
-                        tab.text =
-                            (if (position < listCategory?.size!!) listCategory?.get(position)?.description else null)
-
-                    }.attach()
-                }
-
-                Status.ERROR -> {
-                    val error = resource.message ?: "Unknown error"
-                    Logger.logE(error)
-                }
-
-                Status.LOADING -> {
-                    Logger.logI("Loading...")
-                }
-            }
-        }
     }
 }

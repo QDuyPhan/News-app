@@ -8,16 +8,23 @@
   </data>
 
   <androidx.drawerlayout.widget.DrawerLayout
-      android:id="@+id/drawerLayout"
+      android:id="@+id/homeFragment"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:fitsSystemWindows="true"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      tools:context=".ui.home.HomeFragment"
-      tools:openDrawer="start">
+      tools:context=".ui.home.HomeFragment">
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/navmeu_background"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
+        app:menu="@menu/nav_menu" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,15 +36,15 @@
           android:layout_height="wrap_content"
           android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbar"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="45dp"-->
-<!--            android:elevation="4dp"-->
-<!--            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
-<!--            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />-->
-
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/lavender"
+            android:navigationIcon="@drawable/baseline_menu_24"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
       </com.google.android.material.appbar.AppBarLayout>
+
 
       <androidx.core.widget.NestedScrollView
           android:layout_width="match_parent"
@@ -46,18 +53,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
             android:orientation="horizontal">
 
           <com.google.android.material.tabs.TabLayout
               android:id="@+id/tabLayout"
-              android:layout_width="0dp"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_weight="1"
               android:background="@drawable/background_transparent"
               app:tabGravity="fill"
-              app:tabSelectedTextColor="@color/black"
               app:tabIndicatorColor="@color/lavender"
-              app:tabMode="scrollable" />
+              app:tabMode="scrollable"
+              app:tabSelectedTextColor="@color/black" />
         </LinearLayout>
       </androidx.core.widget.NestedScrollView>
 
@@ -66,17 +74,5 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent" />
     </LinearLayout>
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@drawable/navmeu_background"
-        app:headerLayout="@layout/nav_header"
-        app:itemIconTint="@color/black"
-        app:itemTextColor="@color/black"
-        app:menu="@menu/nav_menu" />
   </androidx.drawerlayout.widget.DrawerLayout>
-
 </layout>

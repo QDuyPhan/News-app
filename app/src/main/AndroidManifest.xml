@@ -21,11 +21,13 @@
       android:usesCleartextTraffic="true"
       tools:targetApi="31">
     <activity
-        android:name=".ui.splash.MainActivity"
-        android:exported="false" />
+        android:name=".ui.splash.SplashActivity"
+        android:exported="false"
+        android:theme="@style/Theme.App.Starting" />
     <activity
         android:name=".ui.account.AccountActivity"
-        android:exported="true">
+        android:exported="true"
+        android:theme="@style/Theme.App.Starting">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 

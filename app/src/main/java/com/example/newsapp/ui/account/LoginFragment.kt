@@ -1,36 +1,29 @@
 package com.example.newsapp.ui.account
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.newsapp.R
-import com.example.newsapp.data.local.PreferenceRepository
 import com.example.newsapp.databinding.FragmentLoginBinding
-import com.example.newsapp.ui.main.MainActivity
-import com.example.newsapp.utils.Constants.ACTIVATE
 import com.example.newsapp.utils.Logger
-import com.example.newsapp.utils.Resource
 import com.example.newsapp.utils.Status
 import com.example.newsapp.utils.setOnSingClickListener
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
-    private lateinit var binding: FragmentLoginBinding
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
     private val viewModel by viewModels<AccountViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLoginBinding.inflate(inflater, container, false)
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -96,5 +89,10 @@ class LoginFragment : Fragment() {
         btnGoogle.setOnSingClickListener {
             Logger.logI("Login with Facebook")
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
