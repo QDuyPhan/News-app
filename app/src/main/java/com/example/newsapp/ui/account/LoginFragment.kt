@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentLoginBinding
+import com.example.newsapp.utils.Constants.ACTIVATE
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
 import com.example.newsapp.utils.setOnSingClickListener
@@ -56,8 +57,8 @@ class LoginFragment : Fragment() {
         viewModel.loginResult.observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.SUCCESS -> {
-//                    viewModel.saveLoginState(ACTIVATE)
-//                    Logger.logI("isLogin: ${viewModel.isLogin()}")
+                    viewModel.saveLoginState(ACTIVATE)
+                    Logger.logI("LoginFragment isLogin: ${viewModel.isLogin()}")
                     resource.data?.let {
                         viewModel.saveToken(it.result.token)
                     }

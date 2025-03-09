@@ -10,6 +10,8 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivityAccountBinding
+import com.example.newsapp.utils.Constants.UNACTIVATE
+import com.example.newsapp.utils.Logger
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +31,13 @@ class AccountActivity : AppCompatActivity() {
             }
         }
         navController = findNavController(R.id.nav_host_fragment)
+        Logger.logI("AccountActivity isLogin: ${viewModel.isLogin()}")
+        if (viewModel.isLogin() == UNACTIVATE) {
+            navController.navigate(R.id.loginFragment)
+        } else {
+            navController.navigate(R.id.homeFragment)
+        }
+
         // Ẩn BottomNavigationView, NavigationView, Toolbar ở màn hình Login
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.loginFragment || destination.id == R.id.registerFragment) {
