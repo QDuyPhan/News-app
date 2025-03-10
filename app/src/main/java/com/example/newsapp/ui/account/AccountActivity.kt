@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivityAccountBinding
 import com.example.newsapp.utils.Constants.UNACTIVATE
@@ -31,6 +32,7 @@ class AccountActivity : AppCompatActivity() {
             }
         }
         navController = findNavController(R.id.nav_host_fragment)
+        binding.bottomNav.setupWithNavController(navController)
         Logger.logI("AccountActivity isLogin: ${viewModel.isLogin()}")
         if (viewModel.isLogin() == UNACTIVATE) {
             navController.navigate(R.id.loginFragment)

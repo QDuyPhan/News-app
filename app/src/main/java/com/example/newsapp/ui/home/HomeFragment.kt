@@ -2,7 +2,6 @@ package com.example.newsapp.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -13,23 +12,27 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.newsapp.R
 import com.example.newsapp.adapter.ViewPagerAdapter
 import com.example.newsapp.data.response.CategoryResponse
 import com.example.newsapp.databinding.FragmentHomeBinding
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
+class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: ViewPagerAdapter
     private var listCategory: List<CategoryResponse>? = null
     private val viewModel by viewModels<HomeViewModel>()
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -40,16 +43,8 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        binding.homeFragment.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
-        (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
-        val toggle = ActionBarDrawerToggle(
-            requireActivity(), binding.homeFragment, binding.toolbar,
-            R.string.open_nav, R.string.close_nav
-        )
-        binding.homeFragment.addDrawerListener(toggle)
-        toggle.syncState()
-        onItemClickMenu()
+        setUpMemu()
+//        onItemClickMenu()
         setupObserver()
     }
 
@@ -83,12 +78,40 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         }
     }
 
+    private fun setUpMemu() {
+        binding.apply {
+            (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+            homeFragment.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            (activity as AppCompatActivity).setSupportActionBar(toolbar)
+            navController =
+                (requireActivity().supportFragmentManager
+                    .findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+            navView.setupWithNavController(navController)
+
+            val toggle = ActionBarDrawerToggle(
+                requireActivity(), homeFragment, toolbar,
+                R.string.open_nav, R.string.close_nav
+            )
+            homeFragment.addDrawerListener(toggle)
+            toggle.syncState()
+        }
+    }
+
     private fun onItemClickMenu() {
         binding.navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_home -> {
-                    Toast.makeText(requireContext(), "Trang chủ", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.homeFragment)
                 }
+
+                R.id.nav_category -> {
+                    findNavController().navigate(R.id.categoryFragment)
+                }
+
+                R.id.nav_post -> {
+                    findNavController().navigate(R.id.newsFragment)
+                }
+
 
                 R.id.nav_logout -> {
                     Toast.makeText(requireContext(), "Đăng xuất", Toast.LENGTH_SHORT).show()
@@ -104,33 +127,33 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         _binding = null
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.nav_home -> {
-                Toast.makeText(requireContext(), "Trang chủ", Toast.LENGTH_SHORT).show()
-            }
-
-            R.id.nav_category -> {
-                Toast.makeText(requireContext(), "Danh mục", Toast.LENGTH_SHORT).show()
-            }
-
-            R.id.nav_post -> {
-                Toast.makeText(requireContext(), "Đăng tin tức", Toast.LENGTH_SHORT).show()
-            }
-
-            R.id.nav_approve -> {
-                Toast.makeText(requireContext(), "Phê duyệt tin tức", Toast.LENGTH_SHORT).show()
-            }
-
-            R.id.nav_role -> {
-                Toast.makeText(requireContext(), "Phân quyền", Toast.LENGTH_SHORT).show()
-            }
-
-            R.id.nav_logout -> {
-                Toast.makeText(requireContext(), "Đăng xuất", Toast.LENGTH_SHORT).show()
-            }
-        }
-        binding.homeFragment.closeDrawer(GravityCompat.START)
-        return true
-    }
+//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.nav_home -> {
+//                Toast.makeText(requireContext(), "Trang chủ", Toast.LENGTH_SHORT).show()
+//            }
+//
+//            R.id.nav_category -> {
+//                Toast.makeText(requireContext(), "Danh mục", Toast.LENGTH_SHORT).show()
+//            }
+//
+//            R.id.nav_post -> {
+//                Toast.makeText(requireContext(), "Đăng tin tức", Toast.LENGTH_SHORT).show()
+//            }
+//
+//            R.id.nav_approve -> {
+//                Toast.makeText(requireContext(), "Phê duyệt tin tức", Toast.LENGTH_SHORT).show()
+//            }
+//
+//            R.id.nav_role -> {
+//                Toast.makeText(requireContext(), "Phân quyền", Toast.LENGTH_SHORT).show()
+//            }
+//
+//            R.id.nav_logout -> {
+//                Toast.makeText(requireContext(), "Đăng xuất", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//        binding.homeFragment.closeDrawer(GravityCompat.START)
+//        return true
+//    }
 }

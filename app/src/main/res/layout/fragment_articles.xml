@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.articles.ArticlesFragment">
 
+  <com.example.newsapp.ui.widget.ActionBarView
+      android:id="@+id/action_bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:action_bar_enable_left="true"
+      app:action_bar_enable_right="true"
+      app:action_bar_title=""
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
 
   <WebView
       android:id="@+id/webView"

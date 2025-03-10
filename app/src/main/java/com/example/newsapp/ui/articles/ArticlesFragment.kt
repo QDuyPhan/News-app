@@ -8,7 +8,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentArticlesBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,20 +33,28 @@ class ArticlesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val article = args.article
         loadURLToWebView(article?.content.toString())
+        clickBack()
     }
 
     private fun loadURLToWebView(link: String) {
-        binding.progressBar.visibility = View.VISIBLE // Hiển thị trước khi tải trang
+        binding.progressBar.visibility = View.VISIBLE
         binding.webView.apply {
             webViewClient = object : WebViewClient() {
                 override fun onPageCommitVisible(view: WebView?, url: String?) {
                     super.onPageCommitVisible(view, url)
-                    binding.progressBar.visibility = View.GONE // Ẩn khi tải xong
+                    binding.progressBar.visibility = View.GONE
                 }
             }
             loadUrl(link)
         }
+    }
 
+    private fun clickBack() {
+        binding.apply {
+            actionBar.setOnClickLeft {
+                findNavController().navigate(R.id.homeFragment)
+            }
+        }
     }
 
     override fun onDestroyView() {

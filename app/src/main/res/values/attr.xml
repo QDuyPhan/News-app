@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="ActionBarView">
+    <attr name="action_bar_title" format="string" />
+    <attr name="action_bar_src_left" format="reference" />
+    <attr name="action_bar_src_right" format="reference" />
+    <attr name="action_bar_enable_left" format="boolean" />
+    <attr name="action_bar_enable_right" format="boolean" />
+  </declare-styleable>
+</resources>

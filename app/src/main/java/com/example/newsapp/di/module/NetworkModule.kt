@@ -2,8 +2,8 @@ package com.example.newsapp.di.module
 
 import com.example.newsapp.BuildConfig
 import com.example.newsapp.data.local.PreferenceRepository
+import com.example.newsapp.data.remote.service.AuthService
 import com.example.newsapp.data.remote.service.NewsService
-import com.example.newsapp.utils.Constants.DEFAULT_TIMEOUT
 import com.example.newsapp.utils.Constants.NETWORK_TIMEOUT
 import com.example.newsapp.utils.LocalDateTimeDeserializer
 import com.google.gson.Gson
@@ -12,14 +12,13 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
-import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDateTime
-import java.util.concurrent.TimeUnit
+import javax.inject.Provider
+import javax.inject.Singleton
 
 
 @Module
@@ -35,34 +34,27 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideGson(): Gson = GsonBuilder()
-        .registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
-        .setLenient()
-        .create()
+    fun provideGson(): Gson =
+        GsonBuilder().registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
+            .setLenient().create()
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(preferenceRepository: PreferenceRepository): OkHttpClient {
+    fun provideAuthInterceptor(
+        preferenceRepository: PreferenceRepository,
+        authService: Provider<AuthService>
+    ): AuthInterceptor {
+        return AuthInterceptor(preferenceRepository, authService)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(
+        authInterceptor: AuthInterceptor
+    ): OkHttpClient {
         val builder = OkHttpClient.Builder()
 
-        val headerInterceptor = Interceptor { chain ->
-            val originalRequest = chain.request()
-
-            val loginAPI = originalRequest.url.encodedPath.contains("/api/auth/login")
-            val signupAPI = originalRequest.url.encodedPath.contains("/api/users")
-
-            if (loginAPI || signupAPI) return@Interceptor chain.proceed(originalRequest)
-
-            val token = preferenceRepository.getTokenKey()
-
-            val newRequest = originalRequest.newBuilder()
-                .addHeader("Authorization", "Bearer $token")
-                .build()
-
-            chain.proceed(newRequest)
-        }
-
-        builder.addInterceptor(headerInterceptor)
+        builder.addInterceptor(authInterceptor)
 
         if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor()
@@ -82,10 +74,14 @@ object NetworkModule {
             .addConverterFactory(GsonConverterFactory.create(gson)).build()
     }
 
-
     @Provides
     @Singleton
     fun provideNewsService(retrofit: Retrofit): NewsService =
         retrofit.create(NewsService::class.java)
 
+    @Provides
+    @Singleton
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
+    }
 }

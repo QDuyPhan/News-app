@@ -1,13 +1,13 @@
 package com.example.newsapp.data.remote
 
+import com.example.newsapp.data.remote.service.NewsService
 import com.example.newsapp.data.request.LoginRequest
 import com.example.newsapp.data.request.SignupRequest
 import com.example.newsapp.data.response.ApiResponse
 import com.example.newsapp.data.response.AuthenticationResponse
-import com.example.newsapp.data.response.UserResponse
-import com.example.newsapp.data.remote.service.NewsService
 import com.example.newsapp.data.response.CategoryResponse
 import com.example.newsapp.data.response.NewsResponse
+import com.example.newsapp.data.response.UserResponse
 import com.example.newsapp.utils.IODispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -39,4 +39,5 @@ class NewsRepository @Inject constructor(
         {
             newsService.getNewsByCategory(categoryName)
         }
+
 }

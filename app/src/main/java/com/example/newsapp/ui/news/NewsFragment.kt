@@ -108,7 +108,10 @@ class NewsFragment : Fragment() {
             val bundle = Bundle().apply {
                 putSerializable("article", it)
             }
-            findNavController().navigate(R.id.action_homeFragment_to_articlesFragment, bundle)
+            findNavController().navigate(
+                R.id.action_homeFragment_to_articlesFragment,
+                bundle
+            )
         }
     }
 

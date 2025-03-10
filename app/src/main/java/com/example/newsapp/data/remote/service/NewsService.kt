@@ -30,4 +30,5 @@ interface NewsService {
 
     @GET("/api/news/{categoryName}")
     suspend fun getNewsByCategory(@Path("categoryName") categoryName: String?): Response<ApiResponse<List<NewsResponse>>>
+
 }

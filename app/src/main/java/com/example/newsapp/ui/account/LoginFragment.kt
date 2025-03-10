@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentLoginBinding
@@ -63,7 +64,11 @@ class LoginFragment : Fragment() {
                         viewModel.saveToken(it.result.token)
                     }
                     val navController = findNavController()
-                    navController.navigate(R.id.action_loginFragment_to_homeFragment)
+                    navController.navigate(
+                        R.id.action_loginFragment_to_homeFragment,
+                        null,
+                        NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
+                    )
 //                    navController.popBackStack(R.id.loginFragment, true)
                 }
 
