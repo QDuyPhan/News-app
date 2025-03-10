@@ -4,20 +4,17 @@
     <!-- Customize your light theme here. -->
     <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
 
-    <!--    <item name="colorPrimary">@android:color/transparent</item>-->
-    <!--    <item name="colorPrimaryVariant">@android:color/black</item>-->
-    <!--    <item name="colorOnPrimary">@android:color/transparent</item>-->
+    <item name="colorPrimary">@android:color/transparent</item>
+    <item name="colorPrimaryVariant">@android:color/black</item>
+    <item name="colorOnPrimary">@android:color/transparent</item>
 
-    <!--    <item name="colorSecondary">@android:color/transparent</item>-->
-    <!--    <item name="colorSecondaryVariant">@android:color/transparent</item>-->
-    <!--    <item name="colorOnSecondary">@android:color/transparent</item>-->
+    <item name="colorSecondary">@android:color/transparent</item>
+    <item name="colorSecondaryVariant">@android:color/transparent</item>
+    <item name="colorOnSecondary">@android:color/transparent</item>
 
-    <item name="windowNoTitle">true</item>
-    <item name="android:windowFullscreen">false</item>
-    <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-
-
-    <item name="android:statusBarColor">@color/black</item>
+    <item name="android:windowTranslucentStatus">false</item>
+    <item name="android:fitsSystemWindows">true</item>
+    <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
   </style>
 

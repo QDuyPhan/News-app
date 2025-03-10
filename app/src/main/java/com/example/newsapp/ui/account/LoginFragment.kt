@@ -64,6 +64,7 @@ class LoginFragment : Fragment() {
                     }
                     val navController = findNavController()
                     navController.navigate(R.id.action_loginFragment_to_homeFragment)
+//                    navController.popBackStack(R.id.loginFragment, true)
                 }
 
                 Status.ERROR -> {

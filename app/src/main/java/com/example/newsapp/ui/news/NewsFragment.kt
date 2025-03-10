@@ -1,25 +1,24 @@
 package com.example.newsapp.ui.news
 
-import android.annotation.SuppressLint
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.R
-import com.example.newsapp.data.response.NewsResponse
 import com.example.newsapp.databinding.FragmentNewsBinding
 import com.example.newsapp.utils.Logger
+import com.example.newsapp.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class NewsFragment : Fragment() {
-    private lateinit var binding: FragmentNewsBinding
+    private var _binding: FragmentNewsBinding? = null
+    private val binding get() = _binding!!
     private val viewModel by viewModels<NewsViewModel>()
     private lateinit var adapter: NewsAdapter
     private var categoryName: String? = null
@@ -44,11 +43,16 @@ class NewsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        binding = FragmentNewsBinding.inflate(layoutInflater)
+        _binding = FragmentNewsBinding.inflate(layoutInflater)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupUI()
         setupObserver()
         setOnClickNews()
-        return binding.root
     }
 
     private fun setupUI() {
@@ -69,12 +73,31 @@ class NewsFragment : Fragment() {
             with(viewModel) {
                 getData(categoryName)
                 newsResult.observe(viewLifecycleOwner) { resource ->
-                    resource?.data.let {
-                        it?.result?.let { news ->
-                            Logger.logI("LIST NEWS: $news")
-                            adapter.addData(news)
+                    when (resource.status) {
+                        Status.LOADING -> {
+                            Logger.logI("Loading...")
+                            prgBarMovies.visibility = View.VISIBLE
+                            rvNews.visibility = View.GONE
+                        }
+
+                        Status.ERROR -> {
+                            prgBarMovies.visibility = View.GONE
+                            val error = resource.message ?: "Unknown error"
+                            Logger.logE(error)
+                        }
+
+                        Status.SUCCESS -> {
+                            prgBarMovies.visibility = View.GONE
+                            resource?.data.let {
+                                it?.result?.let { news ->
+                                    Logger.logI("LIST NEWS: $news")
+                                    adapter.addData(news)
+                                }
+                            }
+                            rvNews.visibility = View.VISIBLE
                         }
                     }
+
                 }
             }
         }
@@ -85,7 +108,12 @@ class NewsFragment : Fragment() {
             val bundle = Bundle().apply {
                 putSerializable("article", it)
             }
-            findNavController().navigate(R.id.action_homeFragment_to_articlesFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_articlesFragment, bundle)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -38,7 +38,6 @@ class AccountActivity : AppCompatActivity() {
             navController.navigate(R.id.homeFragment)
         }
 
-        // Ẩn BottomNavigationView, NavigationView, Toolbar ở màn hình Login
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.loginFragment || destination.id == R.id.registerFragment) {
                 binding.bottomNav.visibility = View.GONE

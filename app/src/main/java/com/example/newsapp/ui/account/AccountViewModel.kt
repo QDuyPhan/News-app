@@ -12,17 +12,16 @@ import com.example.newsapp.data.response.ApiResponse
 import com.example.newsapp.data.response.AuthenticationResponse
 import com.example.newsapp.data.response.UserResponse
 import com.example.newsapp.ui.base.BaseViewModel
-import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
@@ -69,6 +68,7 @@ class AccountViewModel @Inject constructor(
                 }
             } else _loginResult.postValue(Resource.error("No internet connection", null))
         }
+        registerEventParentJobFinish()
     }
 
     fun signup(name: String, username: String, password: String, email: String) {

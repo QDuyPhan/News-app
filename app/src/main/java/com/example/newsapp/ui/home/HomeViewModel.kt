@@ -15,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val newsRepository: NewsRepository, private val networkHelper: NetworkHelper
+    private val newsRepository: NewsRepository,
+    private val networkHelper: NetworkHelper
 ) : BaseViewModel() {
     private val _listCategory = MutableLiveData<Resource<ApiResponse<List<CategoryResponse>>>>()
     val listCategory: LiveData<Resource<ApiResponse<List<CategoryResponse>>>> get() = _listCategory
