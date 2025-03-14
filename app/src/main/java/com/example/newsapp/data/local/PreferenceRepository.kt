@@ -1,7 +1,7 @@
 package com.example.newsapp.data.local
 
 import android.content.SharedPreferences
-import com.example.newsapp.data.response.RoleResponse
+import com.example.newsapp.data.remote.response.RoleResponse
 import com.example.newsapp.utils.Constants.EMAIL
 import com.example.newsapp.utils.Constants.ID
 import com.example.newsapp.utils.Constants.IS_LOGIN

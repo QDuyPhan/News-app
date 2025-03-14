@@ -1,12 +1,12 @@
 package com.example.newsapp.data.remote.service
 
-import com.example.newsapp.data.request.LoginRequest
-import com.example.newsapp.data.request.SignupRequest
-import com.example.newsapp.data.response.ApiResponse
-import com.example.newsapp.data.response.AuthenticationResponse
-import com.example.newsapp.data.response.CategoryResponse
-import com.example.newsapp.data.response.NewsResponse
-import com.example.newsapp.data.response.UserResponse
+import com.example.newsapp.data.remote.request.LoginRequest
+import com.example.newsapp.data.remote.request.SignupRequest
+import com.example.newsapp.data.remote.response.ApiResponse
+import com.example.newsapp.data.remote.response.AuthenticationResponse
+import com.example.newsapp.data.remote.response.CategoryResponse
+import com.example.newsapp.data.remote.response.NewsResponse
+import com.example.newsapp.data.remote.response.UserResponse
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
@@ -31,4 +31,9 @@ interface NewsService {
     @GET("/api/news/{categoryName}")
     suspend fun getNewsByCategory(@Path("categoryName") categoryName: String?): Response<ApiResponse<List<NewsResponse>>>
 
+    @GET("/api/users/myInfo")
+    suspend fun getMyInfo() : Response<ApiResponse<UserResponse>>
+
+    @GET("/api/news")
+    suspend fun getAllNews(): Response<ApiResponse<List<NewsResponse>>>
 }

@@ -18,7 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.newsapp.R
 import com.example.newsapp.adapter.ViewPagerAdapter
-import com.example.newsapp.data.response.CategoryResponse
+import com.example.newsapp.data.remote.response.CategoryResponse
 import com.example.newsapp.databinding.FragmentHomeBinding
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
@@ -46,6 +46,29 @@ class HomeFragment : Fragment() {
         setUpMemu()
 //        onItemClickMenu()
         setupObserver()
+        getUserInfo()
+    }
+
+    private fun getUserInfo() {
+        viewModel.userInfo.observe(viewLifecycleOwner) { resource ->
+            when (resource.status) {
+                Status.SUCCESS -> {
+                    resource.data?.let {
+                        Logger.logI("User info: ${it.result}")
+                    }
+                }
+
+                Status.ERROR -> {
+                    val error = resource.message ?: "Unknown error"
+                    Logger.logE(error)
+                }
+
+                Status.LOADING -> {
+                    Logger.logI("Loading...")
+                }
+            }
+
+        }
     }
 
     private fun setupObserver() {

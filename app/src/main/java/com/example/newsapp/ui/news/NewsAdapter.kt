@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.newsapp.data.response.NewsResponse
+import com.example.newsapp.data.remote.response.NewsResponse
 import com.example.newsapp.databinding.ItemNewsBinding
 import com.example.newsapp.utils.setOnSingClickListener
 import java.time.format.TextStyle

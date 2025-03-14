@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.remote.NetworkHelper
 import com.example.newsapp.data.remote.NewsRepository
-import com.example.newsapp.data.response.ApiResponse
-import com.example.newsapp.data.response.NewsResponse
+import com.example.newsapp.data.remote.response.ApiResponse
+import com.example.newsapp.data.remote.response.NewsResponse
 import com.example.newsapp.ui.base.BaseViewModel
 import com.example.newsapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,5 +36,9 @@ class NewsViewModel @Inject constructor(
                 }
             } else _newsResult.postValue(Resource.error("No internet connection", null))
         }
+    }
+
+    fun saveReadNews() {
+
     }
 }

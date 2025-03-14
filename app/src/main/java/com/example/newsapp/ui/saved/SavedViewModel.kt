@@ -1,11 +1,15 @@
 package com.example.newsapp.ui.saved
 
-import androidx.lifecycle.ViewModel
+import com.example.newsapp.data.remote.NetworkHelper
+import com.example.newsapp.data.remote.NewsRepository
 import com.example.newsapp.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class SavedViewModel @Inject constructor() : BaseViewModel() {
-    // TODO: Implement the ViewModel
+class SavedViewModel @Inject constructor(
+    private val newsRepository: NewsRepository,
+    private val networkHelper: NetworkHelper
+) : BaseViewModel() {
+
 }

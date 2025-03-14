@@ -90,7 +90,6 @@ class NewsFragment : Fragment() {
                             prgBarMovies.visibility = View.GONE
                             resource?.data.let {
                                 it?.result?.let { news ->
-                                    Logger.logI("LIST NEWS: $news")
                                     adapter.addData(news)
                                 }
                             }

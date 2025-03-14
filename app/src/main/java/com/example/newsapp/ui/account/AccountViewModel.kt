@@ -6,11 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.local.PreferenceRepository
 import com.example.newsapp.data.remote.NetworkHelper
 import com.example.newsapp.data.remote.NewsRepository
-import com.example.newsapp.data.request.LoginRequest
-import com.example.newsapp.data.request.SignupRequest
-import com.example.newsapp.data.response.ApiResponse
-import com.example.newsapp.data.response.AuthenticationResponse
-import com.example.newsapp.data.response.UserResponse
+import com.example.newsapp.data.remote.request.LoginRequest
+import com.example.newsapp.data.remote.request.SignupRequest
+import com.example.newsapp.data.remote.response.ApiResponse
+import com.example.newsapp.data.remote.response.AuthenticationResponse
+import com.example.newsapp.data.remote.response.UserResponse
 import com.example.newsapp.ui.base.BaseViewModel
 import com.example.newsapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -2,7 +2,7 @@ package com.example.newsapp.di.module
 
 import com.example.newsapp.data.local.PreferenceRepository
 import com.example.newsapp.data.remote.service.AuthService
-import com.example.newsapp.data.request.RefreshRequest
+import com.example.newsapp.data.remote.request.RefreshRequest
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Interceptor.Chain

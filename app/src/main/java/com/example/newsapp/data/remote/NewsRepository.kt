@@ -1,13 +1,13 @@
 package com.example.newsapp.data.remote
 
+import com.example.newsapp.data.remote.request.LoginRequest
+import com.example.newsapp.data.remote.request.SignupRequest
+import com.example.newsapp.data.remote.response.ApiResponse
+import com.example.newsapp.data.remote.response.AuthenticationResponse
+import com.example.newsapp.data.remote.response.CategoryResponse
+import com.example.newsapp.data.remote.response.NewsResponse
+import com.example.newsapp.data.remote.response.UserResponse
 import com.example.newsapp.data.remote.service.NewsService
-import com.example.newsapp.data.request.LoginRequest
-import com.example.newsapp.data.request.SignupRequest
-import com.example.newsapp.data.response.ApiResponse
-import com.example.newsapp.data.response.AuthenticationResponse
-import com.example.newsapp.data.response.CategoryResponse
-import com.example.newsapp.data.response.NewsResponse
-import com.example.newsapp.data.response.UserResponse
 import com.example.newsapp.utils.IODispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -40,4 +40,14 @@ class NewsRepository @Inject constructor(
             newsService.getNewsByCategory(categoryName)
         }
 
+    suspend fun getMyInfo(): Response<ApiResponse<UserResponse>> =
+        withContext(dispatcher) {
+            newsService.getMyInfo()
+        }
+
+    suspend fun getAllNews(): Response<ApiResponse<List<NewsResponse>>> =
+        withContext(dispatcher)
+        {
+            newsService.getAllNews()
+        }
 }
