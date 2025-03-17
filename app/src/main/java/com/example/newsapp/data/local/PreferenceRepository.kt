@@ -7,8 +7,6 @@ import com.example.newsapp.utils.Constants.ID
 import com.example.newsapp.utils.Constants.IS_LOGIN
 import com.example.newsapp.utils.Constants.NAME
 import com.example.newsapp.utils.Constants.ROLE
-import com.example.newsapp.utils.Constants.TOKEN
-import com.example.newsapp.utils.Constants.UNACTIVATE
 import com.example.newsapp.utils.Constants.USERNAME
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -29,18 +27,13 @@ class PreferenceRepository @Inject constructor(
     fun getRole(): Set<RoleResponse>? =
         sharedPreferences.getStringSet(ROLE, setOf()) as Set<RoleResponse>?
 
-    fun saveTokenKey(token: String) {
-        sharedPreferences.edit().putString(TOKEN, token).apply()
+
+    fun saveUserLoginStatus(value: Boolean) {
+        sharedPreferences.edit().putBoolean(IS_LOGIN, value).apply()
     }
 
-    fun getTokenKey(): String? = sharedPreferences.getString(TOKEN, null)
-
-    fun saveUserLoginStatus(value: String) {
-        sharedPreferences.edit().putString(IS_LOGIN, value).apply()
-    }
-
-    fun isUserLoggedIn(): String? {
-        return sharedPreferences.getString(IS_LOGIN, UNACTIVATE)
+    fun isUserLoggedIn(): Boolean {
+        return sharedPreferences.getBoolean(IS_LOGIN, false)
     }
 
 }

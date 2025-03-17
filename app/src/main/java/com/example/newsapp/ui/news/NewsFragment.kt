@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.R
+import com.example.newsapp.data.local.entity.NewsEntity
+import com.example.newsapp.data.remote.response.UserResponse
 import com.example.newsapp.databinding.FragmentNewsBinding
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
@@ -22,6 +24,7 @@ class NewsFragment : Fragment() {
     private val viewModel by viewModels<NewsViewModel>()
     private lateinit var adapter: NewsAdapter
     private var categoryName: String? = null
+    private var user: UserResponse? = null
 
     companion object {
         fun newInstance(categoryName: String): NewsFragment {
@@ -53,6 +56,13 @@ class NewsFragment : Fragment() {
         setupUI()
         setupObserver()
         setOnClickNews()
+        getUserId()
+
+        viewModel.newsSaved.observe(viewLifecycleOwner) {
+            it?.map {
+                Logger.logI("Saved news: $it")
+            }
+        }
     }
 
     private fun setupUI() {
@@ -65,6 +75,12 @@ class NewsFragment : Fragment() {
                 )
             )
             rvNews.adapter = adapter
+        }
+    }
+
+    private fun getUserId() {
+        viewModel.user.observe(viewLifecycleOwner) { user ->
+            this.user = user
         }
     }
 
@@ -104,6 +120,19 @@ class NewsFragment : Fragment() {
 
     private fun setOnClickNews() {
         adapter.setOnItemClickListener {
+            viewModel.saveReadNews(
+                NewsEntity(
+                    it.id,
+                    it.title,
+                    it.content,
+                    it.image,
+                    it.publishedAt,
+                    it.createdAt,
+                    it.updatedAt,
+                    it.categories,
+                    user?.id.toString()
+                )
+            )
             val bundle = Bundle().apply {
                 putSerializable("article", it)
             }

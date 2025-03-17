@@ -176,4 +176,11 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.material)
     implementation(libs.circleimageview)
+    //DataStore
+    implementation(libs.androidx.datastore.preferences)
+    implementation (libs.androidx.datastore)
+    implementation (libs.protobuf.javalite)
+
+    implementation(libs.kotlinx.serialization.json)
+
 }

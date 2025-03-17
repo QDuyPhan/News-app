@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.NavOptions
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentLoginBinding
-import com.example.newsapp.utils.Constants.ACTIVATE
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
 import com.example.newsapp.utils.setOnSingClickListener
@@ -21,6 +23,9 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<AccountViewModel>()
+    private val tokenViewModel by activityViewModels<TokenViewModel>()
+    private lateinit var navController: NavController
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -31,6 +36,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
         onClickListener()
         loginWithGoogle()
         loginWithFacebook()
@@ -54,22 +60,26 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun checkToken() {
+        tokenViewModel.token.observe(viewLifecycleOwner) { token ->
+            if (token != null)
+                navController.navigate(
+                    R.id.action_loginFragment_to_homeFragment,
+                    null,
+                    NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
+                )
+        }
+    }
+
     private fun setupObserver() {
         viewModel.loginResult.observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.SUCCESS -> {
-                    viewModel.saveLoginState(ACTIVATE)
-                    Logger.logI("LoginFragment isLogin: ${viewModel.isLogin()}")
+                    viewModel.saveLoginState(true)
                     resource.data?.let {
-                        viewModel.saveToken(it.result.token)
+                        tokenViewModel.saveToken(it.result.token)
                     }
-                    val navController = findNavController()
-                    navController.navigate(
-                        R.id.action_loginFragment_to_homeFragment,
-                        null,
-                        NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
-                    )
-//                    navController.popBackStack(R.id.loginFragment, true)
+                    checkToken()
                 }
 
                 Status.ERROR -> {
@@ -83,6 +93,7 @@ class LoginFragment : Fragment() {
             }
         }
     }
+
 
     private fun loginWithGoogle() {
         val btnGoogle = binding.googleLoginBtn

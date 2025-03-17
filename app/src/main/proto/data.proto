@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_package = "com.example.newsapp";
+option java_multiple_files = true;
+
+message RoleResponse {
+  string role_id = 1;
+  string role_name = 2;
+}
+
+message UserResponse {
+  string id = 1;
+  string name = 2;
+  string username = 3;
+  string email = 4;
+  string password = 5;
+  string created_at = 6;
+  string updated_at = 7;
+  repeated RoleResponse roles = 8;
+}

@@ -11,7 +11,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.newsapp.R
 import com.example.newsapp.databinding.ActivityAccountBinding
-import com.example.newsapp.utils.Constants.UNACTIVATE
 import com.example.newsapp.utils.Logger
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,7 +33,7 @@ class AccountActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment)
         binding.bottomNav.setupWithNavController(navController)
         Logger.logI("AccountActivity isLogin: ${viewModel.isLogin()}")
-        if (viewModel.isLogin() == UNACTIVATE) {
+        if (!viewModel.isLogin()) {
             navController.navigate(R.id.loginFragment)
         } else {
             navController.navigate(R.id.homeFragment)

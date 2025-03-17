@@ -38,23 +38,21 @@ class AccountViewModel @Inject constructor(
     private val _isReady = MutableStateFlow(false)
     val isReady = _isReady.asStateFlow()
 
+
     init {
         viewModelScope.launch(exceptionHandler + Dispatchers.Main) {
             _isReady.value = true
         }
     }
 
-    fun isLogin(): String? {
+    fun isLogin(): Boolean {
         return preferenceRepository.isUserLoggedIn()
     }
 
-    fun saveLoginState(value: String) {
+    fun saveLoginState(value: Boolean) {
         preferenceRepository.saveUserLoginStatus(value)
     }
 
-    fun saveToken(token: String) {
-        preferenceRepository.saveTokenKey(token)
-    }
 
     fun login(username: String, password: String) {
         viewModelScope.launch(exceptionHandler) {
@@ -99,5 +97,6 @@ class AccountViewModel @Inject constructor(
             _signupResult.value = Resource.error("No internet connection", null)
         }
     }
+
 
 }

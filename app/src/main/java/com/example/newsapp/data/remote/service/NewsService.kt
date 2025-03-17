@@ -29,10 +29,11 @@ interface NewsService {
     suspend fun getCategories(): Response<ApiResponse<List<CategoryResponse>>>
 
     @GET("/api/news/{categoryName}")
-    suspend fun getNewsByCategory(@Path("categoryName") categoryName: String?): Response<ApiResponse<List<NewsResponse>>>
+    suspend fun getNewsByCategory(@Path("categoryName") categoryName: String?):
+            Response<ApiResponse<List<NewsResponse>>>
 
     @GET("/api/users/myInfo")
-    suspend fun getMyInfo() : Response<ApiResponse<UserResponse>>
+    suspend fun getMyInfo(): Response<ApiResponse<UserResponse>>
 
     @GET("/api/news")
     suspend fun getAllNews(): Response<ApiResponse<List<NewsResponse>>>

@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -20,6 +21,7 @@ import com.example.newsapp.R
 import com.example.newsapp.adapter.ViewPagerAdapter
 import com.example.newsapp.data.remote.response.CategoryResponse
 import com.example.newsapp.databinding.FragmentHomeBinding
+import com.example.newsapp.ui.account.TokenViewModel
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
 import com.google.android.material.tabs.TabLayoutMediator
@@ -32,7 +34,9 @@ class HomeFragment : Fragment() {
     private lateinit var adapter: ViewPagerAdapter
     private var listCategory: List<CategoryResponse>? = null
     private val viewModel by viewModels<HomeViewModel>()
+    private val tokenViewModel by activityViewModels<TokenViewModel>()
     private lateinit var navController: NavController
+    private var token: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -43,10 +47,19 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkToken()
         setUpMemu()
 //        onItemClickMenu()
         setupObserver()
         getUserInfo()
+    }
+
+    private fun checkToken() {
+        tokenViewModel.token.observe(viewLifecycleOwner) { token ->
+            this.token = token
+            if (token == null)
+                navController.navigate(R.id.loginFragment)
+        }
     }
 
     private fun getUserInfo() {
@@ -54,7 +67,7 @@ class HomeFragment : Fragment() {
             when (resource.status) {
                 Status.SUCCESS -> {
                     resource.data?.let {
-                        Logger.logI("User info: ${it.result}")
+                        viewModel.saveUserInfo(it.result)
                     }
                 }
 
@@ -64,12 +77,13 @@ class HomeFragment : Fragment() {
                 }
 
                 Status.LOADING -> {
-                    Logger.logI("Loading...")
+                    Logger.logI("Waiting get user info...")
                 }
             }
 
         }
     }
+
 
     private fun setupObserver() {
         viewModel.listCategory.observe(viewLifecycleOwner) { resource ->
@@ -107,13 +121,11 @@ class HomeFragment : Fragment() {
             homeFragment.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             (activity as AppCompatActivity).setSupportActionBar(toolbar)
             navController =
-                (requireActivity().supportFragmentManager
-                    .findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+                (requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
             navView.setupWithNavController(navController)
 
             val toggle = ActionBarDrawerToggle(
-                requireActivity(), homeFragment, toolbar,
-                R.string.open_nav, R.string.close_nav
+                requireActivity(), homeFragment, toolbar, R.string.open_nav, R.string.close_nav
             )
             homeFragment.addDrawerListener(toggle)
             toggle.syncState()
