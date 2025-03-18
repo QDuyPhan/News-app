@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentArticlesBinding
+import com.example.newsapp.utils.Logger
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,7 +21,6 @@ class ArticlesFragment : Fragment() {
     private var _binding: FragmentArticlesBinding? = null
     private val binding get() = _binding!!
     private val args: ArticlesFragmentArgs by navArgs()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,8 +32,15 @@ class ArticlesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val article = args.article
-        loadURLToWebView(article?.content.toString())
-        clickBack()
+        val savedArticle = args.savedArticle
+        val previousScreen = args.previousScreen
+        val link = article?.content ?: savedArticle?.content
+        link?.let {
+            loadURLToWebView(it)
+        } ?: run {
+            Logger.logI("Không tìm thấy nội dung bài viết")
+        }
+        clickBack(previousScreen)
     }
 
     private fun loadURLToWebView(link: String) {
@@ -49,16 +56,29 @@ class ArticlesFragment : Fragment() {
         }
     }
 
-    private fun clickBack() {
+    private fun clickBack(previousScreen: String?) {
         binding.apply {
             actionBar.setOnClickLeft {
-                findNavController().navigate(R.id.homeFragment)
+                when (previousScreen) {
+                    "news" -> findNavController().navigate(R.id.action_articlesFragment_to_homeFragment)
+                    "saved" -> findNavController().navigate(R.id.action_articlesFragment_to_savedFragment)
+                    "summary" -> findNavController().navigate(R.id.action_articlesFragment_to_summaryFragment)
+                    else -> findNavController().navigate(R.id.homeFragment)
+                }
+
             }
         }
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
+        binding.webView.apply {
+            loadUrl("about:blank")
+            stopLoading()
+            clearHistory()
+            removeAllViews()
+            destroy()
+        }
         _binding = null
+        super.onDestroyView()
     }
 }

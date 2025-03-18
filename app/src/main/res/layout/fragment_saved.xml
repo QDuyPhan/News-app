@@ -12,15 +12,15 @@
       android:layout_height="wrap_content"
       android:layout_marginLeft="@dimen/_10sdp"
       android:layout_marginRight="@dimen/_10sdp"
-      app:action_bar_enable_left="true"
       app:action_bar_enable_right="true"
+      app:action_bar_src_right="@drawable/trash"
       app:action_bar_title="Bài viết đã xem"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/rvNews"
+      android:id="@+id/rvSavedNews"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:orientation="vertical"

@@ -9,8 +9,8 @@ class LocalService @Inject constructor(private val newsDao: NewsDao) {
         newsDao.saveNews(newsEntity)
     }
 
-    suspend fun getAllNews(): List<NewsEntity> {
-        return newsDao.getAllNews()
+    suspend fun getAllNews(userId: String): List<NewsEntity> {
+        return newsDao.getAllNews(userId = userId)
     }
 
     suspend fun deleteAllNews() {

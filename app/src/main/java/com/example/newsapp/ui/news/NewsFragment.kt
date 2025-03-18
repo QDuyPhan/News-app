@@ -9,10 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.newsapp.R
 import com.example.newsapp.data.local.entity.NewsEntity
 import com.example.newsapp.data.remote.response.UserResponse
 import com.example.newsapp.databinding.FragmentNewsBinding
+import com.example.newsapp.ui.home.HomeFragmentDirections
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +47,6 @@ class NewsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNewsBinding.inflate(layoutInflater)
-
         return binding.root
     }
 
@@ -55,14 +54,8 @@ class NewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         setupObserver()
-        setOnClickNews()
         getUserId()
-
-        viewModel.newsSaved.observe(viewLifecycleOwner) {
-            it?.map {
-                Logger.logI("Saved news: $it")
-            }
-        }
+        setOnClickNews()
     }
 
     private fun setupUI() {
@@ -112,7 +105,6 @@ class NewsFragment : Fragment() {
                             rvNews.visibility = View.VISIBLE
                         }
                     }
-
                 }
             }
         }
@@ -133,12 +125,13 @@ class NewsFragment : Fragment() {
                     user?.id.toString()
                 )
             )
-            val bundle = Bundle().apply {
-                putSerializable("article", it)
-            }
+            val action = HomeFragmentDirections.actionHomeFragmentToArticlesFragment(
+                article = it,
+                savedArticle = null,
+                previousScreen = "news"
+            )
             findNavController().navigate(
-                R.id.action_homeFragment_to_articlesFragment,
-                bundle
+                action
             )
         }
     }

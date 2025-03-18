@@ -13,15 +13,18 @@ class LocalRepository @Inject constructor(
     private val localService: LocalService,
     @IODispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    suspend fun saveNews(newsEntity: NewsEntity) = withContext(dispatcher) {
-        localService.saveNews(newsEntity)
-    }
+    suspend fun saveNews(newsEntity: NewsEntity) =
+        withContext(dispatcher) {
+            localService.saveNews(newsEntity)
+        }
 
-    suspend fun getAllNews(): List<NewsEntity> = withContext(dispatcher) {
-        localService.getAllNews()
-    }
+    suspend fun getAllNews(userId: String): List<NewsEntity> =
+        withContext(dispatcher) {
+            localService.getAllNews(userId = userId)
+        }
 
-    suspend fun deleteAllNews() = withContext(dispatcher) {
-        localService.deleteAllNews()
-    }
+    suspend fun deleteAllNews() =
+        withContext(dispatcher) {
+            localService.deleteAllNews()
+        }
 }

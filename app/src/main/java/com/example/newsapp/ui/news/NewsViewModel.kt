@@ -35,14 +35,10 @@ class NewsViewModel @Inject constructor(
     private val _newsResult = MutableLiveData<Resource<ApiResponse<List<NewsResponse>>>>()
     val newsResult: LiveData<Resource<ApiResponse<List<NewsResponse>>>> get() = _newsResult
 
-    private val _newsSaved = MutableLiveData<List<NewsEntity>>()
-    val newsSaved: LiveData<List<NewsEntity>> get() = _newsSaved
-
     val user = MutableLiveData<UserResponse?>()
 
     init {
         getUserInfo()
-        getSavedNews()
     }
 
     fun getData(categoryName: String?) {
@@ -73,12 +69,6 @@ class NewsViewModel @Inject constructor(
                     user.value = it
                 }
             }
-        }
-    }
-
-    private fun getSavedNews() {
-        viewModelScope.launch(exceptionHandler + Maindispatcher) {
-            _newsSaved.postValue(localRepository.getAllNews())
         }
     }
 
