@@ -14,10 +14,12 @@ class AuthInterceptor @Inject constructor(
         val token = runBlocking {
             appSettingImpl.getToken().first()
         }
+        Logger.logI("AuthInterceptor: $token")
         val originalRequest = chain.request()
-        if (originalRequest.url.encodedPath.contains("/api/auth/login") ||
-            originalRequest.url.encodedPath.contains("/api/users") ||
-            originalRequest.url.encodedPath.contains("/api/auth/refresh")
+        if (originalRequest.url.encodedPath.contains("/auth/login") ||
+            originalRequest.url.encodedPath.contains("/users") ||
+            originalRequest.url.encodedPath.contains("/auth/refresh") ||
+            originalRequest.url.encodedPath.contains("/auth/logout")
         ) {
             return chain.proceed(originalRequest)
         }

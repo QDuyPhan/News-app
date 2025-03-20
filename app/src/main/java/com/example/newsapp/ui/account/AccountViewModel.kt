@@ -7,6 +7,7 @@ import com.example.newsapp.data.local.PreferenceRepository
 import com.example.newsapp.data.remote.NetworkHelper
 import com.example.newsapp.data.remote.NewsRepository
 import com.example.newsapp.data.remote.request.LoginRequest
+import com.example.newsapp.data.remote.request.LogoutRequest
 import com.example.newsapp.data.remote.request.SignupRequest
 import com.example.newsapp.data.remote.response.ApiResponse
 import com.example.newsapp.data.remote.response.AuthenticationResponse
@@ -35,6 +36,9 @@ class AccountViewModel @Inject constructor(
     private val _loginResult = MutableLiveData<Resource<ApiResponse<AuthenticationResponse>>>()
     val loginResult: LiveData<Resource<ApiResponse<AuthenticationResponse>>> get() = _loginResult
 
+    private val _logoutResult = MutableLiveData<Resource<ApiResponse<Void>>>()
+    val logoutResult: LiveData<Resource<ApiResponse<Void>>> get() = _logoutResult
+
     private val _isReady = MutableStateFlow(false)
     val isReady = _isReady.asStateFlow()
 
@@ -42,6 +46,20 @@ class AccountViewModel @Inject constructor(
     init {
         viewModelScope.launch(exceptionHandler + Dispatchers.Main) {
             _isReady.value = true
+        }
+    }
+
+    fun logout(token: String) {
+        viewModelScope.launch(exceptionHandler) {
+            _logoutResult.postValue(Resource.loading(null))
+            if (networkHelper.isNetworkConnected()) {
+                val response = newsRepository.logout(LogoutRequest(token))
+                response.let {
+                    if (response.isSuccessful) {
+                        _logoutResult.postValue(Resource.success(it.body()))
+                    } else _logoutResult.postValue(Resource.error(it.message().toString(), null))
+                }
+            } else _logoutResult.postValue(Resource.error("No internet connection", null))
         }
     }
 

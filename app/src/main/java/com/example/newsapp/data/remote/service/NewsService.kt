@@ -15,26 +15,26 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface NewsService {
-    @POST("/api/auth/login")
+    @POST("/auth/login")
     suspend fun login(
         @Body loginRequest: LoginRequest
     ): Response<ApiResponse<AuthenticationResponse>>
 
-    @POST("/api/users")
+    @POST("/users")
     fun signup(
         @Body signupRequest: SignupRequest
     ): Call<ApiResponse<UserResponse>>
 
-    @GET("/api/category")
+    @GET("/category")
     suspend fun getCategories(): Response<ApiResponse<List<CategoryResponse>>>
 
-    @GET("/api/news/{categoryName}")
+    @GET("/news/{categoryName}")
     suspend fun getNewsByCategory(@Path("categoryName") categoryName: String?):
             Response<ApiResponse<List<NewsResponse>>>
 
-    @GET("/api/users/myInfo")
+    @GET("/users/myInfo")
     suspend fun getMyInfo(): Response<ApiResponse<UserResponse>>
 
-    @GET("/api/news")
+    @GET("/news")
     suspend fun getAllNews(): Response<ApiResponse<List<NewsResponse>>>
 }

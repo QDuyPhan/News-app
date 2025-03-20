@@ -15,13 +15,13 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 class AuthAuthenticator @Inject constructor(
-    private val appSettingImpl: AppSettingImpl,
-    private val authService: Provider<AuthService>
+    private val appSettingImpl: AppSettingImpl, private val authService: Provider<AuthService>
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
         val token = runBlocking {
             appSettingImpl.getToken().first()
         }
+        Logger.logI("AuthAuthenticator: $token")
         return runBlocking {
             val newToken = getNewToken(token)
 
@@ -31,8 +31,7 @@ class AuthAuthenticator @Inject constructor(
 
             newToken.body()?.let {
                 appSettingImpl.saveToken(it.result.token)
-                response.request.newBuilder()
-                    .header("Authorization", "Bearer ${it.result.token}")
+                response.request.newBuilder().header("Authorization", "Bearer ${it.result.token}")
                     .build()
             }
         }

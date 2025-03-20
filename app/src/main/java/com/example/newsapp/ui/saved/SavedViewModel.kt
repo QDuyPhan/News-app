@@ -58,4 +58,10 @@ class SavedViewModel @Inject constructor(
         }
     }
 
+    fun deleteAllNews() {
+        viewModelScope.launch(exceptionHandler) {
+            localRepository.deleteAllNews()
+        }
+    }
+
 }

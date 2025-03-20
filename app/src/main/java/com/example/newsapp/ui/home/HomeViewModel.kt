@@ -44,6 +44,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun deleteUserInfo() {
+        viewModelScope.launch(IOdispatcher) {
+            appSettingImpl.deleteUserInfo()
+        }
+    }
+
 
     private fun getUserInfo() {
         viewModelScope.launch(exceptionHandler) {
@@ -57,7 +63,6 @@ class HomeViewModel @Inject constructor(
                 }
             } else _userInfo.postValue(Resource.error("No internet connection", null))
         }
-        registerEventParentJobFinish()
     }
 
     private fun getCategories() {
@@ -77,7 +82,6 @@ class HomeViewModel @Inject constructor(
                 }
             } else _listCategory.postValue(Resource.error("No internet connection", null))
         }
-        registerEventParentJobFinish()
     }
 
 

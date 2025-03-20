@@ -7,16 +7,27 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.summary.SummaryFragment">
 
+  <androidx.appcompat.widget.SearchView
+      android:id="@+id/searchView"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:iconifiedByDefault="false"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:queryBackground="@android:color/transparent"
+      app:queryHint="Tìm kiếm ..." />
+
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/rvNews"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
+      android:layout_height="0dp"
       android:orientation="vertical"
       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/searchView"
       tools:listitem="@layout/item_news" />
 
   <ProgressBar

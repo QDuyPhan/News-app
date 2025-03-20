@@ -46,7 +46,7 @@ class LoginFragment : Fragment() {
         binding.apply {
             signInBtn.setOnSingClickListener {
                 val username = editUsernameSignIN.text.toString()
-                val password = editUsernameSignIN.text.toString()
+                val password = editPassSignIn.text.toString()
                 if (username.isEmpty() || password.isEmpty()) {
                     Logger.logI("Hãy Nhập Đầy Đủ Thông Tin")
                 } else {
@@ -64,7 +64,7 @@ class LoginFragment : Fragment() {
         tokenViewModel.token.observe(viewLifecycleOwner) { token ->
             if (token != null)
                 navController.navigate(
-                    R.id.action_loginFragment_to_homeFragment,
+                    R.id.homeFragment,
                     null,
                     NavOptions.Builder().setPopUpTo(R.id.loginFragment, true).build()
                 )

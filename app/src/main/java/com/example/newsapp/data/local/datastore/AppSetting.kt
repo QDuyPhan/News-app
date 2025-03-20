@@ -12,6 +12,8 @@ interface AppSetting {
         userResponse: UserResponse
     )
 
+    suspend fun deleteUserInfo()
+
     suspend fun getUserInfo(): Flow<UserResponse?>
 
 }

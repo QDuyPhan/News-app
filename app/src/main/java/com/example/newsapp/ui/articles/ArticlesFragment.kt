@@ -71,14 +71,8 @@ class ArticlesFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        binding.webView.apply {
-            loadUrl("about:blank")
-            stopLoading()
-            clearHistory()
-            removeAllViews()
-            destroy()
-        }
-        _binding = null
         super.onDestroyView()
+        _binding = null
     }
+
 }

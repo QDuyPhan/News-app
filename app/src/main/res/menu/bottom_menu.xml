@@ -13,10 +13,6 @@
       android:icon="@drawable/bookmark"
       android:title="Lưu" />
   <item
-      android:id="@+id/searchFragment"
-      android:icon="@drawable/search"
-      android:title="Tìm kiếm" />
-  <item
       android:id="@+id/profileFragment"
       android:icon="@drawable/profile"
       android:title="Cá nhân" />

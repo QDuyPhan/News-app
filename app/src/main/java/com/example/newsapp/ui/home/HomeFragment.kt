@@ -2,8 +2,10 @@ package com.example.newsapp.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,42 +16,51 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
 import com.example.newsapp.R
 import com.example.newsapp.adapter.ViewPagerAdapter
 import com.example.newsapp.data.remote.response.CategoryResponse
 import com.example.newsapp.databinding.FragmentHomeBinding
+import com.example.newsapp.ui.account.AccountViewModel
 import com.example.newsapp.ui.account.TokenViewModel
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: ViewPagerAdapter
     private var listCategory: List<CategoryResponse>? = null
-    private val viewModel by viewModels<HomeViewModel>()
+    private val homeViewModel by viewModels<HomeViewModel>()
     private val tokenViewModel by activityViewModels<TokenViewModel>()
+    private val accountViewModel by activityViewModels<AccountViewModel>()
     private lateinit var navController: NavController
+    private lateinit var navigationView: NavigationView
     private var token: String? = null
+    private lateinit var txtUsername: TextView
+    private lateinit var txtEmail: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val headerView = binding.navView.getHeaderView(0)
+        txtUsername = headerView.findViewById<TextView>(R.id.tvUsername)
+        txtEmail = headerView.findViewById<TextView>(R.id.tvEmail)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navigationView = binding.navView
         checkToken()
         setUpMemu()
-//        onItemClickMenu()
         setupObserver()
         getUserInfo()
     }
@@ -58,16 +69,25 @@ class HomeFragment : Fragment() {
         tokenViewModel.token.observe(viewLifecycleOwner) { token ->
             this.token = token
             if (token == null)
-                navController.navigate(R.id.loginFragment)
+                navController.navigate(
+                    R.id.loginFragment,
+                    null,
+                    NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build()
+                )
         }
     }
 
     private fun getUserInfo() {
-        viewModel.userInfo.observe(viewLifecycleOwner) { resource ->
+        homeViewModel.userInfo.observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.SUCCESS -> {
                     resource.data?.let {
-                        viewModel.saveUserInfo(it.result)
+                        homeViewModel.saveUserInfo(it.result)
+                        txtUsername.text = it.result.username
+                        txtEmail.text = it.result.email
+                        it.result.roles.map {
+                            setMenuByRole(it.name)
+                        }
                     }
                 }
 
@@ -84,9 +104,17 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun setMenuByRole(role: String) {
+        val isAdmin = role.equals("ADMIN", ignoreCase = true)
+        val isUser = role.equals("USER", ignoreCase = true)
+        val menu = binding.navView.menu
+        menu.findItem(R.id.nav_approve).isVisible = isAdmin
+        menu.findItem(R.id.nav_role).isVisible = isAdmin
+    }
+
 
     private fun setupObserver() {
-        viewModel.listCategory.observe(viewLifecycleOwner) { resource ->
+        homeViewModel.listCategory.observe(viewLifecycleOwner) { resource ->
             when (resource.status) {
                 Status.SUCCESS -> {
                     resource.data?.let { data ->
@@ -120,40 +148,18 @@ class HomeFragment : Fragment() {
             (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
             homeFragment.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             (activity as AppCompatActivity).setSupportActionBar(toolbar)
+            navigationView.setNavigationItemSelectedListener(this@HomeFragment)
             navController =
-                (requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
-            navView.setupWithNavController(navController)
+                (requireActivity().supportFragmentManager
+                    .findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 
             val toggle = ActionBarDrawerToggle(
                 requireActivity(), homeFragment, toolbar, R.string.open_nav, R.string.close_nav
             )
             homeFragment.addDrawerListener(toggle)
             toggle.syncState()
-        }
-    }
-
-    private fun onItemClickMenu() {
-        binding.navView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.nav_home -> {
-                    findNavController().navigate(R.id.homeFragment)
-                }
-
-                R.id.nav_category -> {
-                    findNavController().navigate(R.id.categoryFragment)
-                }
-
-                R.id.nav_post -> {
-                    findNavController().navigate(R.id.newsFragment)
-                }
 
 
-                R.id.nav_logout -> {
-                    Toast.makeText(requireContext(), "Đăng xuất", Toast.LENGTH_SHORT).show()
-                }
-            }
-            binding.homeFragment.closeDrawer(GravityCompat.START)
-            true
         }
     }
 
@@ -162,33 +168,49 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.nav_home -> {
-//                Toast.makeText(requireContext(), "Trang chủ", Toast.LENGTH_SHORT).show()
-//            }
-//
-//            R.id.nav_category -> {
-//                Toast.makeText(requireContext(), "Danh mục", Toast.LENGTH_SHORT).show()
-//            }
-//
-//            R.id.nav_post -> {
-//                Toast.makeText(requireContext(), "Đăng tin tức", Toast.LENGTH_SHORT).show()
-//            }
-//
-//            R.id.nav_approve -> {
-//                Toast.makeText(requireContext(), "Phê duyệt tin tức", Toast.LENGTH_SHORT).show()
-//            }
-//
-//            R.id.nav_role -> {
-//                Toast.makeText(requireContext(), "Phân quyền", Toast.LENGTH_SHORT).show()
-//            }
-//
-//            R.id.nav_logout -> {
-//                Toast.makeText(requireContext(), "Đăng xuất", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//        binding.homeFragment.closeDrawer(GravityCompat.START)
-//        return true
-//    }
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_home -> {
+                findNavController().navigate(R.id.homeFragment)
+                Logger.logI("Trang chủ")
+                return true
+            }
+
+            R.id.nav_category -> {
+                Toast.makeText(requireContext(), "Danh mục", Toast.LENGTH_SHORT).show()
+                return true
+            }
+
+            R.id.nav_post -> {
+                Toast.makeText(requireContext(), "Đăng tin tức", Toast.LENGTH_SHORT).show()
+                return true
+            }
+
+            R.id.nav_approve -> {
+                Toast.makeText(requireContext(), "Phê duyệt tin tức", Toast.LENGTH_SHORT).show()
+                return true
+            }
+
+            R.id.nav_role -> {
+                Toast.makeText(requireContext(), "Phân quyền", Toast.LENGTH_SHORT).show()
+                return true
+            }
+
+            R.id.nav_logout -> {
+                Toast.makeText(requireContext(), "Đăng xuất", Toast.LENGTH_SHORT).show()
+                accountViewModel.saveLoginState(false)
+                accountViewModel.logout(token.toString())
+                homeViewModel.deleteUserInfo()
+                tokenViewModel.deleteToken()
+                navController.navigate(
+                    R.id.action_homeFragment_to_loginFragment,
+                    null,
+                    NavOptions.Builder().setPopUpTo(R.id.homeFragment, true).build()
+                )
+                return true
+            }
+        }
+        binding.homeFragment.closeDrawer(GravityCompat.START)
+        return true
+    }
 }

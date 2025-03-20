@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.newsapp.data.remote.response.UserResponse
 import com.example.newsapp.databinding.FragmentSavedBinding
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Status
@@ -21,7 +20,7 @@ class SavedFragment : Fragment() {
     private var _binding: FragmentSavedBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: SavedNewsAdapter
-    private var user: UserResponse? = null
+    private var userId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,9 +33,10 @@ class SavedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
-        getUserId()
+        getSavedNews()
         setupObserver()
         setOnClickNews()
+        clickDeleteNews()
     }
 
     private fun setupUI() {
@@ -89,12 +89,15 @@ class SavedFragment : Fragment() {
     private fun clickDeleteNews() {
         binding.apply {
             actionBar.setOnClickRight {
-
+                with(viewModel) {
+                    deleteAllNews()
+                    getSavedNews()
+                }
             }
         }
     }
 
-    private fun getUserId() {
+    private fun getSavedNews() {
         with(viewModel) {
             user.observe(viewLifecycleOwner) { user ->
                 getSavedNews(user?.id.toString())

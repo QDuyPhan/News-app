@@ -41,6 +41,12 @@ class AppSettingImpl(private val context: Context) : AppSetting {
         }
     }
 
+    override suspend fun deleteUserInfo() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(AppSettingDatastoreKeys.USER_KEY)
+        }
+    }
+
     override suspend fun getUserInfo(): Flow<UserResponse?> {
         return context.dataStore.data.map { preferences ->
             preferences[AppSettingDatastoreKeys.USER_KEY]?.let { jsonString ->
