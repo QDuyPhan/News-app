@@ -1,13 +1,13 @@
 package com.example.newsapp.data.remote.service
 
 import com.example.newsapp.data.remote.request.LoginRequest
+import com.example.newsapp.data.remote.request.PostNewsRequest
 import com.example.newsapp.data.remote.request.SignupRequest
 import com.example.newsapp.data.remote.response.ApiResponse
 import com.example.newsapp.data.remote.response.AuthenticationResponse
 import com.example.newsapp.data.remote.response.CategoryResponse
 import com.example.newsapp.data.remote.response.NewsResponse
 import com.example.newsapp.data.remote.response.UserResponse
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -21,9 +21,9 @@ interface NewsService {
     ): Response<ApiResponse<AuthenticationResponse>>
 
     @POST("/users")
-    fun signup(
+    suspend fun signup(
         @Body signupRequest: SignupRequest
-    ): Call<ApiResponse<UserResponse>>
+    ): Response<ApiResponse<UserResponse>>
 
     @GET("/category")
     suspend fun getCategories(): Response<ApiResponse<List<CategoryResponse>>>
@@ -37,4 +37,7 @@ interface NewsService {
 
     @GET("/news")
     suspend fun getAllNews(): Response<ApiResponse<List<NewsResponse>>>
+
+    @POST("/news")
+    suspend fun createPostNews(@Body postNewsRequest: PostNewsRequest): Response<ApiResponse<NewsResponse>>
 }

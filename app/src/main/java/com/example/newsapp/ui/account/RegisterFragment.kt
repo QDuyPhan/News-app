@@ -1,7 +1,6 @@
 package com.example.newsapp.ui.account
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,23 +10,21 @@ import androidx.navigation.fragment.findNavController
 import com.example.newsapp.R
 import com.example.newsapp.databinding.CustomDialogBinding
 import com.example.newsapp.databinding.FragmentRegisterBinding
+import com.example.newsapp.ui.base.BaseFragment
 import com.example.newsapp.utils.Logger
-import com.example.newsapp.utils.Resource
-import com.example.newsapp.utils.Status
 import com.example.newsapp.utils.setOnSingClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RegisterFragment : Fragment() {
-    private lateinit var binding: FragmentRegisterBinding
+class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
     private lateinit var dialog: AlertDialog
     private val viewModel by viewModels<AccountViewModel>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentRegisterBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentRegisterBinding {
+        return FragmentRegisterBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,23 +54,22 @@ class RegisterFragment : Fragment() {
     }
 
     private fun setupObserver() {
-        viewModel.signupResult.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.SUCCESS -> {
-                    Logger.logI("Register Successfully")
+        binding.apply {
+            observeResource(
+                liveData = viewModel.signupResult,
+                onSuccess = {
+                    prgBarMovies.visibility = View.GONE
                     showAlertDialog()
-                }
-
-                Status.ERROR -> {
-                    val error = it.message ?: "Unknown error"
+                },
+                onError = {
+                    prgBarMovies.visibility = View.GONE
+                    val error = it
                     Logger.logE(error)
+                },
+                onLoading = {
+                    prgBarMovies.visibility = View.VISIBLE
                 }
-
-                Status.LOADING -> {
-                    Logger.logI("Loading...")
-                }
-            }
-
+            )
         }
     }
 

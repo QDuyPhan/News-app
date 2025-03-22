@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -12,16 +11,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.data.local.entity.NewsEntity
 import com.example.newsapp.data.remote.response.UserResponse
 import com.example.newsapp.databinding.FragmentNewsBinding
+import com.example.newsapp.ui.base.BaseFragment
 import com.example.newsapp.ui.home.HomeFragmentDirections
 import com.example.newsapp.utils.Logger
-import com.example.newsapp.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class NewsFragment : Fragment() {
-    private var _binding: FragmentNewsBinding? = null
-    private val binding get() = _binding!!
-    private val viewModel by viewModels<NewsViewModel>()
+class NewsFragment : BaseFragment<FragmentNewsBinding>() {
+    private val newsViewModel by viewModels<NewsViewModel>()
     private lateinit var adapter: NewsAdapter
     private var categoryName: String? = null
     private var user: UserResponse? = null
@@ -43,15 +40,15 @@ class NewsFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentNewsBinding.inflate(layoutInflater)
-        return binding.root
+    override fun inflateBinding(
+        inflater: LayoutInflater, container: ViewGroup?
+    ): FragmentNewsBinding {
+        return FragmentNewsBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        newsViewModel.getData(categoryName)
         setupUI()
         setupObserver()
         getUserId()
@@ -72,47 +69,38 @@ class NewsFragment : Fragment() {
     }
 
     private fun getUserId() {
-        viewModel.user.observe(viewLifecycleOwner) { user ->
+        newsViewModel.user.observe(viewLifecycleOwner) { user ->
             this.user = user
         }
     }
 
     private fun setupObserver() {
         binding.apply {
-            with(viewModel) {
-                getData(categoryName)
-                newsResult.observe(viewLifecycleOwner) { resource ->
-                    when (resource.status) {
-                        Status.LOADING -> {
-                            Logger.logI("Loading...")
-                            prgBarMovies.visibility = View.VISIBLE
-                            rvNews.visibility = View.GONE
-                        }
-
-                        Status.ERROR -> {
-                            prgBarMovies.visibility = View.GONE
-                            val error = resource.message ?: "Unknown error"
-                            Logger.logE(error)
-                        }
-
-                        Status.SUCCESS -> {
-                            prgBarMovies.visibility = View.GONE
-                            resource?.data.let {
-                                it?.result?.let { news ->
-                                    adapter.addData(news)
-                                }
-                            }
-                            rvNews.visibility = View.VISIBLE
-                        }
+            observeResource(
+                liveData = newsViewModel.newsResult,
+                onSuccess = {
+                    prgBarMovies.visibility = View.GONE
+                    it.result.let { news ->
+                        adapter.addData(news)
                     }
-                }
-            }
+                    rvNews.visibility = View.VISIBLE
+                },
+                onError = {
+                    prgBarMovies.visibility = View.GONE
+                    val error = it
+                    Logger.logE(error)
+                },
+                onLoading = {
+                    Logger.logI("Loading...")
+                    prgBarMovies.visibility = View.VISIBLE
+                    rvNews.visibility = View.GONE
+                })
         }
     }
 
     private fun setOnClickNews() {
         adapter.setOnItemClickListener {
-            viewModel.saveReadNews(
+            newsViewModel.saveReadNews(
                 NewsEntity(
                     it.id,
                     it.title,
@@ -126,18 +114,11 @@ class NewsFragment : Fragment() {
                 )
             )
             val action = HomeFragmentDirections.actionHomeFragmentToArticlesFragment(
-                article = it,
-                savedArticle = null,
-                previousScreen = "news"
+                article = it, savedArticle = null, previousScreen = "news"
             )
             findNavController().navigate(
                 action
             )
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

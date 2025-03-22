@@ -2,6 +2,7 @@ package com.example.newsapp.data.remote
 
 import com.example.newsapp.data.remote.request.LoginRequest
 import com.example.newsapp.data.remote.request.LogoutRequest
+import com.example.newsapp.data.remote.request.PostNewsRequest
 import com.example.newsapp.data.remote.request.SignupRequest
 import com.example.newsapp.data.remote.response.ApiResponse
 import com.example.newsapp.data.remote.response.AuthenticationResponse
@@ -13,7 +14,6 @@ import com.example.newsapp.data.remote.service.NewsService
 import com.example.newsapp.utils.IODispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class NewsRepository @Inject constructor(
             newsService.login(loginRequest)
         }
 
-    fun signup(signupRequest: SignupRequest): Call<ApiResponse<UserResponse>> =
+    suspend fun signup(signupRequest: SignupRequest): Response<ApiResponse<UserResponse>> =
         newsService.signup(signupRequest)
 
     suspend fun getCategories(): Response<ApiResponse<List<CategoryResponse>>> =
@@ -57,5 +57,10 @@ class NewsRepository @Inject constructor(
     suspend fun logout(logoutRequest: LogoutRequest): Response<ApiResponse<Void>> =
         withContext(dispatcher) {
             authService.logout(logoutRequest)
+        }
+
+    suspend fun createPostNews(postNewsRequest: PostNewsRequest): Response<ApiResponse<NewsResponse>> =
+        withContext(dispatcher) {
+            newsService.createPostNews(postNewsRequest)
         }
 }

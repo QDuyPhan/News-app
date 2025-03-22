@@ -4,30 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.newsapp.databinding.FragmentSavedBinding
+import com.example.newsapp.ui.base.BaseFragment
 import com.example.newsapp.utils.Logger
-import com.example.newsapp.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SavedFragment : Fragment() {
+class SavedFragment : BaseFragment<FragmentSavedBinding>() {
     private val viewModel by viewModels<SavedViewModel>()
-    private var _binding: FragmentSavedBinding? = null
-    private val binding get() = _binding!!
     private lateinit var adapter: SavedNewsAdapter
     private var userId: String? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSavedBinding.inflate(layoutInflater)
-        return binding.root
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSavedBinding {
+        return FragmentSavedBinding.inflate(layoutInflater)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,34 +50,26 @@ class SavedFragment : Fragment() {
 
     private fun setupObserver() {
         binding.apply {
-            with(viewModel) {
-                newsSaved.observe(viewLifecycleOwner) { resources ->
-                    when (resources.status) {
-                        Status.LOADING -> {
-                            prgBarMovies.visibility = View.VISIBLE
-                            rvSavedNews.visibility = View.GONE
-                        }
-
-                        Status.ERROR -> {
-                            prgBarMovies.visibility = View.GONE
-                            val error = resources.message ?: "Unknown error"
-                            Logger.logE(error)
-                        }
-
-                        Status.SUCCESS -> {
-                            prgBarMovies.visibility = View.GONE
-                            resources.data?.let { news ->
-                                if (news.isNotEmpty()) {
-                                    rvSavedNews.visibility = View.VISIBLE
-                                    adapter.addData(news)
-                                } else {
-                                    rvSavedNews.visibility = View.GONE
-                                }
-                            }
-                        }
+            observeResource(
+                liveData = viewModel.newsSaved,
+                onSuccess = {
+                    prgBarMovies.visibility = View.GONE
+                    if (it.isNotEmpty()) {
+                        rvSavedNews.visibility = View.VISIBLE
+                        adapter.addData(it)
+                    } else {
+                        rvSavedNews.visibility = View.GONE
                     }
+                },
+                onError = {
+                    prgBarMovies.visibility = View.GONE
+                    val error = it
+                    Logger.logE(error)
+                }, onLoading = {
+                    prgBarMovies.visibility = View.VISIBLE
+                    rvSavedNews.visibility = View.GONE
                 }
-            }
+            )
         }
     }
 
@@ -116,10 +103,5 @@ class SavedFragment : Fragment() {
                 action
             )
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

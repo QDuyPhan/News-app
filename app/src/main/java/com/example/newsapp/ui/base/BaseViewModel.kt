@@ -1,12 +1,15 @@
 package com.example.newsapp.ui.base
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.remote.NetworkHelper
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.Resource
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,18 +17,49 @@ import retrofit2.Response
 abstract class BaseViewModel : ViewModel() {
     protected var parentJob: Job? = null
 
-    var isLoading = MutableLiveData(false)
-        private set
+    protected val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        Logger.logE(throwable.message.toString())
+        postError(throwable.message ?: "Unknown error")
+    }
 
-    protected fun registerEventParentJobFinish() {
-        parentJob?.invokeOnCompletion {
-            isLoading.postValue(false)
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> get() = _errorMessage
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
+    protected fun setLoading(isLoading: Boolean) {
+        _isLoading.postValue(isLoading)
+    }
+
+    protected fun postError(message: String) {
+        _errorMessage.postValue(message)
+    }
+
+    inline fun <T> ViewModel.safeApiCall(
+        liveData: MutableLiveData<Resource<T>>,
+        networkHelper: NetworkHelper,
+        crossinline apiCall: suspend () -> Response<T>
+    ) {
+        viewModelScope.launch {
+            liveData.postValue(Resource.loading(null))
+            if (networkHelper.isNetworkConnected()) {
+                try {
+                    val response = apiCall()
+                    if (response.isSuccessful) {
+                        liveData.postValue(Resource.success(response.body()))
+                    } else {
+                        liveData.postValue(Resource.error(response.message().toString(), null))
+                    }
+                } catch (e: Exception) {
+                    liveData.postValue(Resource.error(e.localizedMessage ?: "Unknown error", null))
+                }
+            } else {
+                liveData.postValue(Resource.error("No internet connection", null))
+            }
         }
     }
 
-    protected val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        Logger.logE(throwable.message.toString())
-    }
 
     protected fun <T> performAction(
         resultLiveData: MutableLiveData<Resource<T>>,

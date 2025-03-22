@@ -29,8 +29,7 @@ class NewsViewModel @Inject constructor(
     @IODispatcher private val IOdispatcher: CoroutineDispatcher,
     @MainDispatcher private val Maindispatcher: CoroutineDispatcher,
     private val appSettingImpl: AppSettingImpl,
-) :
-    BaseViewModel() {
+) : BaseViewModel() {
 
     private val _newsResult = MutableLiveData<Resource<ApiResponse<List<NewsResponse>>>>()
     val newsResult: LiveData<Resource<ApiResponse<List<NewsResponse>>>> get() = _newsResult
@@ -42,17 +41,8 @@ class NewsViewModel @Inject constructor(
     }
 
     fun getData(categoryName: String?) {
-        viewModelScope.launch(exceptionHandler) {
-            _newsResult.postValue(Resource.loading(null))
-            if (networkHelper.isNetworkConnected()) {
-                val response = newsRepository.getNewsByCategory(categoryName)
-                response.let {
-                    if (response.isSuccessful) {
-                        _newsResult.postValue(Resource.success(it.body()))
-                    } else
-                        _newsResult.postValue(Resource.error(it.message().toString(), null))
-                }
-            } else _newsResult.postValue(Resource.error("No internet connection", null))
+        safeApiCall(_newsResult, networkHelper) {
+            newsRepository.getNewsByCategory((categoryName))
         }
     }
 

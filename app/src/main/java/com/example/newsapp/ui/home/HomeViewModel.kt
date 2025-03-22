@@ -11,7 +11,6 @@ import com.example.newsapp.data.remote.response.CategoryResponse
 import com.example.newsapp.data.remote.response.UserResponse
 import com.example.newsapp.ui.base.BaseViewModel
 import com.example.newsapp.utils.IODispatcher
-import com.example.newsapp.utils.MainDispatcher
 import com.example.newsapp.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,7 +23,6 @@ class HomeViewModel @Inject constructor(
     private val networkHelper: NetworkHelper,
     private val appSettingImpl: AppSettingImpl,
     @IODispatcher private val IOdispatcher: CoroutineDispatcher,
-    @MainDispatcher private val Maindispatcher: CoroutineDispatcher,
 ) : BaseViewModel() {
     private val _listCategory = MutableLiveData<Resource<ApiResponse<List<CategoryResponse>>>>()
     val listCategory: LiveData<Resource<ApiResponse<List<CategoryResponse>>>> get() = _listCategory
@@ -50,39 +48,15 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
     private fun getUserInfo() {
-        viewModelScope.launch(exceptionHandler) {
-            _userInfo.postValue(Resource.loading(null))
-            if (networkHelper.isNetworkConnected()) {
-                val response = newsRepository.getMyInfo()
-                response.let {
-                    if (response.isSuccessful) {
-                        _userInfo.postValue(Resource.success(it.body()))
-                    } else _userInfo.postValue(Resource.error(it.message().toString(), null))
-                }
-            } else _userInfo.postValue(Resource.error("No internet connection", null))
+        safeApiCall(_userInfo, networkHelper) {
+            newsRepository.getMyInfo()
         }
     }
 
     private fun getCategories() {
-        viewModelScope.launch(exceptionHandler) {
-            _listCategory.postValue(Resource.loading(null))
-            if (networkHelper.isNetworkConnected()) {
-                val response = newsRepository.getCategories()
-                response.let {
-                    if (response.isSuccessful) {
-                        _listCategory.postValue(Resource.success(it.body()))
-                    } else _listCategory.postValue(
-                        Resource.error(
-                            it.message().toString(),
-                            null
-                        )
-                    )
-                }
-            } else _listCategory.postValue(Resource.error("No internet connection", null))
+        safeApiCall(_listCategory, networkHelper) {
+            newsRepository.getCategories()
         }
     }
-
-
 }

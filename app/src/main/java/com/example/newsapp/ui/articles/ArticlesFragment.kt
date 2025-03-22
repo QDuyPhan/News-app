@@ -6,27 +6,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentArticlesBinding
+import com.example.newsapp.ui.base.BaseFragment
 import com.example.newsapp.utils.Logger
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ArticlesFragment : Fragment() {
+class ArticlesFragment : BaseFragment<FragmentArticlesBinding>() {
     private val viewModel by viewModels<ArticlesViewModel>()
-    private var _binding: FragmentArticlesBinding? = null
-    private val binding get() = _binding!!
+
     private val args: ArticlesFragmentArgs by navArgs()
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentArticlesBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentArticlesBinding {
+        return FragmentArticlesBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,10 +67,4 @@ class ArticlesFragment : Fragment() {
             }
         }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
 }

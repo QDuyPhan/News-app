@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -14,28 +13,25 @@ import com.example.newsapp.data.local.entity.NewsEntity
 import com.example.newsapp.data.remote.response.NewsResponse
 import com.example.newsapp.data.remote.response.UserResponse
 import com.example.newsapp.databinding.FragmentSummaryBinding
+import com.example.newsapp.ui.base.BaseFragment
 import com.example.newsapp.ui.news.NewsAdapter
 import com.example.newsapp.ui.news.NewsViewModel
 import com.example.newsapp.utils.Logger
-import com.example.newsapp.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
 @AndroidEntryPoint
-class SummaryFragment : Fragment() {
-    private var _binding: FragmentSummaryBinding? = null
-    private val binding get() = _binding!!
+class SummaryFragment : BaseFragment<FragmentSummaryBinding>() {
     private lateinit var adapter: NewsAdapter
     private val summaryViewModel by viewModels<SummaryViewModel>()
     private val newsViewModel by viewModels<NewsViewModel>()
     private var user: UserResponse? = null
     private var listNews: List<NewsResponse> = emptyList()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSummaryBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSummaryBinding {
+        return FragmentSummaryBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -90,34 +86,28 @@ class SummaryFragment : Fragment() {
     private fun setupObserver() {
         binding.apply {
             with(summaryViewModel) {
-                news.observe(viewLifecycleOwner) { resource ->
-                    when (resource.status) {
-                        Status.LOADING -> {
-                            Logger.logI("Loading...")
-                            prgBarMovies.visibility = View.VISIBLE
-                            rvNews.visibility = View.GONE
+                observeResource(
+                    liveData = news,
+                    onSuccess = {
+                        prgBarMovies.visibility = View.GONE
+                        it.result.let { news ->
+                            adapter.addData(news)
+                            listNews = news
+                            Logger.logI("List news SummaryFragment: $listNews")
                         }
-
-                        Status.ERROR -> {
-                            prgBarMovies.visibility = View.GONE
-                            val error = resource.message ?: "Unknown error"
-                            Logger.logE(error)
-                        }
-
-                        Status.SUCCESS -> {
-                            prgBarMovies.visibility = View.GONE
-                            resource?.data.let {
-                                it?.result?.let { news ->
-                                    adapter.addData(news)
-                                    listNews = news
-                                    Logger.logI("List news SummaryFragment: $listNews")
-                                }
-                            }
-                            rvNews.visibility = View.VISIBLE
-                        }
+                        rvNews.visibility = View.VISIBLE
+                    },
+                    onError = {
+                        prgBarMovies.visibility = View.GONE
+                        val error = it
+                        Logger.logE(error)
+                    },
+                    onLoading = {
+                        Logger.logI("Loading...")
+                        prgBarMovies.visibility = View.VISIBLE
+                        rvNews.visibility = View.GONE
                     }
-
-                }
+                )
             }
         }
     }
@@ -152,8 +142,4 @@ class SummaryFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

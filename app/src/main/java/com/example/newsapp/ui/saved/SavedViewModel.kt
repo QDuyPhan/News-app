@@ -63,5 +63,4 @@ class SavedViewModel @Inject constructor(
             localRepository.deleteAllNews()
         }
     }
-
 }

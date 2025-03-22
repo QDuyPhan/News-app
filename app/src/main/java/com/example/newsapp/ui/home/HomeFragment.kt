@@ -11,7 +11,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -25,16 +24,15 @@ import com.example.newsapp.data.remote.response.CategoryResponse
 import com.example.newsapp.databinding.FragmentHomeBinding
 import com.example.newsapp.ui.account.AccountViewModel
 import com.example.newsapp.ui.account.TokenViewModel
+import com.example.newsapp.ui.base.BaseFragment
 import com.example.newsapp.utils.Logger
-import com.example.newsapp.utils.Status
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener {
-    private var _binding: FragmentHomeBinding? = null
-    private val binding get() = _binding!!
+class HomeFragment : BaseFragment<FragmentHomeBinding>(),
+    NavigationView.OnNavigationItemSelectedListener {
     private lateinit var adapter: ViewPagerAdapter
     private var listCategory: List<CategoryResponse>? = null
     private val homeViewModel by viewModels<HomeViewModel>()
@@ -46,18 +44,18 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     private lateinit var txtUsername: TextView
     private lateinit var txtEmail: TextView
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val headerView = binding.navView.getHeaderView(0)
-        txtUsername = headerView.findViewById<TextView>(R.id.tvUsername)
-        txtEmail = headerView.findViewById<TextView>(R.id.tvEmail)
-        return binding.root
+    override fun inflateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentHomeBinding {
+        return FragmentHomeBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val headerView = binding.navView.getHeaderView(0)
+        txtUsername = headerView.findViewById<TextView>(R.id.tvUsername)
+        txtEmail = headerView.findViewById<TextView>(R.id.tvEmail)
         navigationView = binding.navView
         checkToken()
         setUpMemu()
@@ -78,30 +76,24 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
     }
 
     private fun getUserInfo() {
-        homeViewModel.userInfo.observe(viewLifecycleOwner) { resource ->
-            when (resource.status) {
-                Status.SUCCESS -> {
-                    resource.data?.let {
-                        homeViewModel.saveUserInfo(it.result)
-                        txtUsername.text = it.result.username
-                        txtEmail.text = it.result.email
-                        it.result.roles.map {
-                            setMenuByRole(it.name)
-                        }
-                    }
+        observeResource(
+            liveData = homeViewModel.userInfo,
+            onSuccess = {
+                homeViewModel.saveUserInfo(it.result)
+                txtUsername.text = it.result.username
+                txtEmail.text = it.result.email
+                it.result.roles.map {
+                    setMenuByRole(it.name)
                 }
-
-                Status.ERROR -> {
-                    val error = resource.message ?: "Unknown error"
-                    Logger.logE(error)
-                }
-
-                Status.LOADING -> {
-                    Logger.logI("Waiting get user info...")
-                }
+            },
+            onError = {
+                val error = it
+                Logger.logE(error)
+            },
+            onLoading = {
+                Logger.logI("Waiting get user info...")
             }
-
-        }
+        )
     }
 
     private fun setMenuByRole(role: String) {
@@ -110,37 +102,34 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         val menu = binding.navView.menu
         menu.findItem(R.id.nav_approve).isVisible = isAdmin
         menu.findItem(R.id.nav_role).isVisible = isAdmin
+        menu.findItem(R.id.nav_post).isVisible = isAdmin
+        menu.findItem(R.id.nav_role).isVisible = isAdmin
+        menu.findItem(R.id.nav_approve).isVisible = isAdmin
     }
 
-
     private fun setupObserver() {
-        homeViewModel.listCategory.observe(viewLifecycleOwner) { resource ->
-            when (resource.status) {
-                Status.SUCCESS -> {
-                    resource.data?.let { data ->
-                        listCategory = data.result
-                    }
-                    val fragmentManager: FragmentManager = childFragmentManager
-                    adapter = ViewPagerAdapter(fragmentManager, lifecycle, listCategory)
-                    binding.viewPager2.adapter = adapter
+        observeResource(
+            liveData = homeViewModel.listCategory,
+            onSuccess = {
+                listCategory = it.result
+                val fragmentManager: FragmentManager = childFragmentManager
+                adapter = ViewPagerAdapter(fragmentManager, lifecycle, listCategory)
+                binding.viewPager2.adapter = adapter
 
-                    TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab, position ->
-                        tab.text =
-                            (if (position < listCategory?.size!!) listCategory?.get(position)?.description else null)
+                TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab, position ->
+                    tab.text =
+                        (if (position < listCategory?.size!!) listCategory?.get(position)?.description else null)
 
-                    }.attach()
-                }
-
-                Status.ERROR -> {
-                    val error = resource.message ?: "Unknown error"
-                    Logger.logE(error)
-                }
-
-                Status.LOADING -> {
-                    Logger.logI("Loading...")
-                }
+                }.attach()
+            },
+            onError = {
+                val error = it
+                Logger.logE(error)
+            },
+            onLoading = {
+                Logger.logI("Loading...")
             }
-        }
+        )
     }
 
     private fun setUpMemu() {
@@ -163,11 +152,6 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
@@ -182,7 +166,7 @@ class HomeFragment : Fragment(), NavigationView.OnNavigationItemSelectedListener
             }
 
             R.id.nav_post -> {
-                Toast.makeText(requireContext(), "Đăng tin tức", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_homeFragment_to_postNewsFragment)
                 return true
             }
 
