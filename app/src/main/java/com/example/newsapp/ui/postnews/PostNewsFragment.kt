@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.newsapp.data.remote.response.CategoryResponse
 import com.example.newsapp.databinding.FragmentPostNewsBinding
 import com.example.newsapp.ui.base.BaseFragment
@@ -31,6 +32,7 @@ class PostNewsFragment : BaseFragment<FragmentPostNewsBinding>() {
         super.onViewCreated(view, savedInstanceState)
         setupObserver()
         clickPostNews()
+        clickBack()
     }
 
     private fun setupObserver() {
@@ -71,6 +73,20 @@ class PostNewsFragment : BaseFragment<FragmentPostNewsBinding>() {
         )
     }
 
+    private fun setEmpty() {
+        binding.edtTitle.text.clear()
+        binding.edtLinkContent.text.clear()
+        binding.edtLinkImg.text.clear()
+    }
+
+    private fun clickBack() {
+        binding.apply {
+            actionBar.setOnClickLeft {
+                findNavController().popBackStack()
+            }
+        }
+    }
+
     private fun clickPostNews() {
         binding.btnPostNews.setOnSingClickListener {
             val title = binding.edtTitle.text.toString()
@@ -78,6 +94,7 @@ class PostNewsFragment : BaseFragment<FragmentPostNewsBinding>() {
             val img = binding.edtLinkImg.text.toString()
             postNewsViewModel.postNews(title, link, img, selectedCategoryId)
             postNews()
+            setEmpty()
         }
     }
 

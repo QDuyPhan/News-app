@@ -11,6 +11,7 @@ import com.example.newsapp.R
 import com.example.newsapp.databinding.CustomDialogBinding
 import com.example.newsapp.databinding.FragmentRegisterBinding
 import com.example.newsapp.ui.base.BaseFragment
+import com.example.newsapp.ui.widget.CustomToast
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.setOnSingClickListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,17 +54,40 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
 
     }
 
+    private fun clearEmptyText() {
+        binding.apply {
+            editNameSignUp.text.clear()
+            editUsernameSignUp.text.clear()
+            editPassSignUp.text.clear()
+            editEmailSignUp.text.clear()
+        }
+    }
+
     private fun setupObserver() {
         binding.apply {
             observeResource(
                 liveData = viewModel.signupResult,
                 onSuccess = {
                     prgBarMovies.visibility = View.GONE
-                    showAlertDialog()
+                    clearEmptyText()
+                    CustomToast.makeText(
+                        requireContext(),
+                        "Đăng Ký Thành Công",
+                        CustomToast.LONG_DURATION,
+                        CustomToast.SUCCESS,
+                        R.drawable.check_icon
+                    ).show()
                 },
                 onError = {
                     prgBarMovies.visibility = View.GONE
                     val error = it
+                    CustomToast.makeText(
+                        requireContext(),
+                        error,
+                        CustomToast.LONG_DURATION,
+                        CustomToast.SUCCESS,
+                        R.drawable.check_icon
+                    ).show()
                     Logger.logE(error)
                 },
                 onLoading = {

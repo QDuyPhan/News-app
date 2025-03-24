@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +24,7 @@ import com.example.newsapp.databinding.FragmentHomeBinding
 import com.example.newsapp.ui.account.AccountViewModel
 import com.example.newsapp.ui.account.TokenViewModel
 import com.example.newsapp.ui.base.BaseFragment
+import com.example.newsapp.ui.widget.CustomToast
 import com.example.newsapp.utils.Logger
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
@@ -41,8 +41,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     private lateinit var navController: NavController
     private lateinit var navigationView: NavigationView
     private var token: String? = null
-    private lateinit var txtUsername: TextView
-    private lateinit var txtEmail: TextView
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -54,8 +52,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val headerView = binding.navView.getHeaderView(0)
-        txtUsername = headerView.findViewById<TextView>(R.id.tvUsername)
-        txtEmail = headerView.findViewById<TextView>(R.id.tvEmail)
         navigationView = binding.navView
         checkToken()
         setUpMemu()
@@ -80,8 +76,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
             liveData = homeViewModel.userInfo,
             onSuccess = {
                 homeViewModel.saveUserInfo(it.result)
-                txtUsername.text = it.result.username
-                txtEmail.text = it.result.email
                 it.result.roles.map {
                     setMenuByRole(it.name)
                 }
@@ -104,6 +98,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
         menu.findItem(R.id.nav_role).isVisible = isAdmin
         menu.findItem(R.id.nav_post).isVisible = isAdmin
         menu.findItem(R.id.nav_role).isVisible = isAdmin
+        menu.findItem(R.id.nav_category).isVisible = isAdmin
         menu.findItem(R.id.nav_approve).isVisible = isAdmin
     }
 
@@ -147,8 +142,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
             )
             homeFragment.addDrawerListener(toggle)
             toggle.syncState()
-
-
         }
     }
 
@@ -177,6 +170,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
 
             R.id.nav_role -> {
                 Toast.makeText(requireContext(), "Phân quyền", Toast.LENGTH_SHORT).show()
+                return true
+            }
+
+            R.id.nav_user -> {
+                CustomToast.makeText(
+                    requireContext(),
+                    "Thông tin tài khoản",
+                    CustomToast.LONG_DURATION,
+                    CustomToast.SUCCESS,
+                    R.drawable.user_icon
+                ).show()
                 return true
             }
 

@@ -9,7 +9,6 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentArticlesBinding
 import com.example.newsapp.ui.base.BaseFragment
 import com.example.newsapp.utils.Logger
@@ -17,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ArticlesFragment : BaseFragment<FragmentArticlesBinding>() {
-    private val viewModel by viewModels<ArticlesViewModel>()
+    private val articlesViewModel by viewModels<ArticlesViewModel>()
 
     private val args: ArticlesFragmentArgs by navArgs()
     override fun inflateBinding(
@@ -57,12 +56,14 @@ class ArticlesFragment : BaseFragment<FragmentArticlesBinding>() {
     private fun clickBack(previousScreen: String?) {
         binding.apply {
             actionBar.setOnClickLeft {
-                when (previousScreen) {
-                    "news" -> findNavController().navigate(R.id.action_articlesFragment_to_homeFragment)
-                    "saved" -> findNavController().navigate(R.id.action_articlesFragment_to_savedFragment)
-                    "summary" -> findNavController().navigate(R.id.action_articlesFragment_to_summaryFragment)
-                    else -> findNavController().navigate(R.id.homeFragment)
-                }
+//                when (previousScreen) {
+//                    "news" -> findNavController().navigate(R.id.action_articlesFragment_to_homeFragment)
+//                    "saved" -> findNavController().navigate(R.id.action_articlesFragment_to_savedFragment)
+//                    "summary" -> findNavController().navigate(R.id.action_articlesFragment_to_summaryFragment)
+//                    else -> findNavController().navigate(R.id.homeFragment)
+//                }
+
+                findNavController().popBackStack()
 
             }
         }

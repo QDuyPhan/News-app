@@ -13,13 +13,14 @@ import androidx.navigation.fragment.findNavController
 import com.example.newsapp.R
 import com.example.newsapp.databinding.FragmentLoginBinding
 import com.example.newsapp.ui.base.BaseFragment
+import com.example.newsapp.ui.widget.CustomToast
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.setOnSingClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>() {
-    private val viewModel by viewModels<AccountViewModel>()
+    private val accountViewModel by viewModels<AccountViewModel>()
     private val tokenViewModel by activityViewModels<TokenViewModel>()
     private lateinit var navController: NavController
     override fun inflateBinding(
@@ -45,7 +46,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
                 if (username.isEmpty() || password.isEmpty()) {
                     Logger.logI("Hãy Nhập Đầy Đủ Thông Tin")
                 } else {
-                    viewModel.login(username, password)
+                    accountViewModel.login(username, password)
                     setupObserver()
                 }
             }
@@ -68,10 +69,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
 
     private fun setupObserver() {
         observeResource(
-            liveData = viewModel.loginResult,
+            liveData = accountViewModel.loginResult,
             onSuccess = {
+                accountViewModel.saveLoginState(value = true)
                 tokenViewModel.saveToken(it.result.token)
                 checkToken()
+                CustomToast.makeText(
+                    requireContext(),
+                    "Đăng Nhập Thành Công",
+                    CustomToast.LONG_DURATION,
+                    CustomToast.SUCCESS,
+                    R.drawable.check_icon
+                ).show()
             },
             onError = {
                 val error = it
