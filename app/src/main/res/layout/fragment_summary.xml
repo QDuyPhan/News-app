@@ -19,7 +19,7 @@
       app:queryHint="Tìm kiếm ..." />
 
   <androidx.recyclerview.widget.RecyclerView
-      android:id="@+id/rvNews"
+      android:id="@+id/rvNewsSummary"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:orientation="vertical"

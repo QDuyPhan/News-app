@@ -108,7 +108,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
             onSuccess = {
                 listCategory = it.result
                 val fragmentManager: FragmentManager = childFragmentManager
-                adapter = ViewPagerAdapter(fragmentManager, lifecycle, listCategory)
+                adapter = ViewPagerAdapter(
+                    fragmentManager,
+                    lifecycle,
+                    listCategory,
+                    previousScreen = "home"
+                )
                 binding.viewPager2.adapter = adapter
 
                 TabLayoutMediator(binding.tabLayout, binding.viewPager2) { tab, position ->
@@ -164,7 +169,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
             }
 
             R.id.nav_approve -> {
-                Toast.makeText(requireContext(), "Phê duyệt tin tức", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_homeFragment_to_managePostsFragment)
                 return true
             }
 

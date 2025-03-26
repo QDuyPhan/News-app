@@ -45,13 +45,14 @@ class SummaryFragment : BaseFragment<FragmentSummaryBinding>() {
     private fun setupUI() {
         binding.apply {
             adapter = NewsAdapter(mutableListOf())
-            rvNews.layoutManager = LinearLayoutManager(requireContext())
-            rvNews.addItemDecoration(
+            rvNewsSummary.layoutManager = LinearLayoutManager(requireContext())
+            rvNewsSummary.addItemDecoration(
                 DividerItemDecoration(
-                    rvNews.context, (rvNews.layoutManager as LinearLayoutManager).orientation
+                    rvNewsSummary.context,
+                    (rvNewsSummary.layoutManager as LinearLayoutManager).orientation
                 )
             )
-            rvNews.adapter = adapter
+            rvNewsSummary.adapter = adapter
 
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
@@ -95,7 +96,7 @@ class SummaryFragment : BaseFragment<FragmentSummaryBinding>() {
                             listNews = news
                             Logger.logI("List news SummaryFragment: $listNews")
                         }
-                        rvNews.visibility = View.VISIBLE
+                        rvNewsSummary.visibility = View.VISIBLE
                     },
                     onError = {
                         prgBarMovies.visibility = View.GONE
@@ -105,7 +106,7 @@ class SummaryFragment : BaseFragment<FragmentSummaryBinding>() {
                     onLoading = {
                         Logger.logI("Loading...")
                         prgBarMovies.visibility = View.VISIBLE
-                        rvNews.visibility = View.GONE
+                        rvNewsSummary.visibility = View.GONE
                     }
                 )
             }

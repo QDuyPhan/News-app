@@ -10,6 +10,7 @@ import com.example.newsapp.data.remote.response.NewsResponse
 import com.example.newsapp.data.remote.response.UserResponse
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -40,4 +41,7 @@ interface NewsService {
 
     @POST("/news")
     suspend fun createPostNews(@Body postNewsRequest: PostNewsRequest): Response<ApiResponse<NewsResponse>>
+
+    @DELETE("news/{newId}")
+    suspend fun deleteNews(@Path("newId") id: Long): Response<ApiResponse<Void>>
 }

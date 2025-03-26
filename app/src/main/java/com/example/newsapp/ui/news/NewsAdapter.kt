@@ -2,6 +2,7 @@ package com.example.newsapp.ui.news
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,6 +15,10 @@ import java.util.Locale
 class NewsAdapter(
     private var news: List<NewsResponse>
 ) : RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+
+    var isSelectMode = false
+    private val selectedItems = mutableSetOf<NewsResponse>()
+    private var onItemClickListener: ((NewsResponse) -> Unit)? = null
 
     inner class ViewHolder(private val binding: ItemNewsBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -28,9 +33,18 @@ class NewsAdapter(
                 txtNewsTitle.text = item.title
                 txtNewsPublished.text = "$dayOfWeek, $day $month"
 
+                checkboxSelect.visibility = if (isSelectMode) View.VISIBLE else View.GONE
+                checkboxSelect.isChecked = selectedItems.contains(item)
+
+                checkboxSelect.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) selectedItems.add(item) else selectedItems.remove(item)
+                }
+
                 root.setOnSingClickListener {
-                    onItemClickListener?.let {
-                        it(item)
+                    if (isSelectMode) {
+                        checkboxSelect.isChecked = !checkboxSelect.isChecked
+                    } else {
+                        onItemClickListener?.invoke(item)
                     }
                 }
             }
@@ -50,7 +64,6 @@ class NewsAdapter(
         holder.bind(news[position])
     }
 
-    private var onItemClickListener: ((NewsResponse) -> Unit)? = null
     fun setOnItemClickListener(listener: (NewsResponse) -> Unit) {
         onItemClickListener = listener
     }
@@ -59,4 +72,16 @@ class NewsAdapter(
         news = list
         notifyDataSetChanged()
     }
+
+    fun enableSelectionMode(enable: Boolean) {
+        isSelectMode = enable
+        if (!enable) selectedItems.clear()
+        notifyDataSetChanged()
+    }
+
+    fun getCurrentList(): List<NewsResponse> {
+        return news
+    }
+
+    fun getSelectedItems(): List<NewsResponse> = selectedItems.toList()
 }

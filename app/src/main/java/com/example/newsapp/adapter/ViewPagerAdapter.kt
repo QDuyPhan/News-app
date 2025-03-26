@@ -10,14 +10,21 @@ import com.example.newsapp.ui.news.NewsFragment
 class ViewPagerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    private val listCategory: List<CategoryResponse>? = null
+    private val listCategory: List<CategoryResponse>? = null,
+    private val onDeleteSelected: (() -> Unit)? = null,
+    private val previousScreen: String
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
+    private val fragments = mutableListOf<NewsFragment>()
     override fun createFragment(position: Int): Fragment {
         val categoryName = listCategory?.get(position)?.name ?: ""
-        return NewsFragment.newInstance(categoryName)
+        val fragment = NewsFragment.newInstance(categoryName, previousScreen)
+        fragments.add(fragment)
+        return fragment
     }
 
     override fun getItemCount(): Int {
         return listCategory!!.size
     }
+
+    fun getFragments(): List<NewsFragment> = fragments
 }

@@ -63,4 +63,10 @@ class NewsRepository @Inject constructor(
         withContext(dispatcher) {
             newsService.createPostNews(postNewsRequest)
         }
+
+    suspend fun deleteNews(id: Long): Response<ApiResponse<Void>> =
+        withContext(dispatcher) {
+            newsService.deleteNews(id)
+        }
+
 }

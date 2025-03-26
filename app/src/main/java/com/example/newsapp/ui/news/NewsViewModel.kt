@@ -34,6 +34,9 @@ class NewsViewModel @Inject constructor(
     private val _newsResult = MutableLiveData<Resource<ApiResponse<List<NewsResponse>>>>()
     val newsResult: LiveData<Resource<ApiResponse<List<NewsResponse>>>> get() = _newsResult
 
+    private val _deleteResult = MutableLiveData<Resource<ApiResponse<Void>>>()
+    val deleteResult: LiveData<Resource<ApiResponse<Void>>> get() = _deleteResult
+
     val user = MutableLiveData<UserResponse?>()
 
     init {
@@ -50,6 +53,13 @@ class NewsViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler + IOdispatcher) {
             localRepository.saveNews(newsEntity)
         }
+    }
+
+    fun deleteNews(id: Long) {
+        safeApiCall(_deleteResult, networkHelper) {
+            newsRepository.deleteNews(id)
+        }
+
     }
 
     private fun getUserInfo() {

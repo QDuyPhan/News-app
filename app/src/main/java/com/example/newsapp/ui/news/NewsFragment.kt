@@ -8,26 +8,32 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.newsapp.R
 import com.example.newsapp.data.local.entity.NewsEntity
 import com.example.newsapp.data.remote.response.UserResponse
 import com.example.newsapp.databinding.FragmentNewsBinding
 import com.example.newsapp.ui.base.BaseFragment
 import com.example.newsapp.ui.home.HomeFragmentDirections
+import com.example.newsapp.ui.manage.post.ManagePostsFragmentDirections
+import com.example.newsapp.ui.widget.CustomToast
 import com.example.newsapp.utils.Logger
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
 @AndroidEntryPoint
 class NewsFragment : BaseFragment<FragmentNewsBinding>() {
     private val newsViewModel by viewModels<NewsViewModel>()
     private lateinit var adapter: NewsAdapter
     private var categoryName: String? = null
+    private var previousScreen: String? = null
     private var user: UserResponse? = null
 
     companion object {
-        fun newInstance(categoryName: String): NewsFragment {
+        fun newInstance(categoryName: String, previousScreen: String): NewsFragment {
             val fragment = NewsFragment()
             val args = Bundle()
             args.putString("category_name", categoryName)
+            args.putString("previous_screen", previousScreen)
             fragment.arguments = args
             return fragment
         }
@@ -36,7 +42,8 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            categoryName = it.getString("category_name")  // Nhận giá trị từ Bundle
+            categoryName = it.getString("category_name")
+            previousScreen = it.getString("previous_screen")
         }
     }
 
@@ -52,7 +59,6 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
         setupUI()
         setupObserver()
         getUserId()
-        setOnClickNews()
     }
 
     private fun setupUI() {
@@ -65,6 +71,7 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
                 )
             )
             rvNews.adapter = adapter
+            setOnClickNews()
         }
     }
 
@@ -76,27 +83,69 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
 
     private fun setupObserver() {
         binding.apply {
-            observeResource(
-                liveData = newsViewModel.newsResult,
-                onSuccess = {
-                    prgBarMovies.visibility = View.GONE
-                    it.result.let { news ->
-                        adapter.addData(news)
-                    }
-                    rvNews.visibility = View.VISIBLE
-                },
-                onError = {
-                    prgBarMovies.visibility = View.GONE
-                    val error = it
-                    Logger.logE(error)
-                },
-                onLoading = {
-                    Logger.logI("Loading...")
-                    prgBarMovies.visibility = View.VISIBLE
-                    rvNews.visibility = View.GONE
-                })
+            observeResource(liveData = newsViewModel.newsResult, onSuccess = {
+                prgBarMovies.visibility = View.GONE
+                it.result.let { news ->
+                    adapter.addData(news)
+                }
+                rvNews.visibility = View.VISIBLE
+            }, onError = {
+                prgBarMovies.visibility = View.GONE
+                val error = it
+                Logger.logE(error)
+            }, onLoading = {
+                Logger.logI("Loading...")
+                prgBarMovies.visibility = View.VISIBLE
+                rvNews.visibility = View.GONE
+            })
         }
     }
+
+    fun toggleDeleteModeOrPerformDelete() {
+        if (!adapter.isSelectMode) {
+            adapter.enableSelectionMode(true)
+            CustomToast.makeText(
+                requireContext(),
+                "Chọn bài viết để xóa",
+                CustomToast.LONG_DURATION,
+                CustomToast.SUCCESS,
+                R.drawable.baseline_info_outline_24
+            ).show()
+        } else {
+            val selectedItems = adapter.getSelectedItems()
+            if (selectedItems.isEmpty()) {
+                adapter.enableSelectionMode(false)
+                return
+            }
+
+            selectedItems.forEach { item ->
+                Logger.logI("Đã xóa: ${item.title + item.id}")
+                newsViewModel.deleteNews(item.id)
+                observeResource(newsViewModel.deleteResult, onSuccess = {
+                    val updatedList = adapter.getCurrentList().filter { it.id != item.id }
+                    adapter.addData(updatedList)
+                    CustomToast.makeText(
+                        requireContext(),
+                        "Xóa bài viết thành công",
+                        CustomToast.LONG_DURATION,
+                        CustomToast.SUCCESS,
+                        R.drawable.check_icon
+                    ).show()
+                }, onError = {
+                    Logger.logE(it)
+                    CustomToast.makeText(
+                        requireContext(),
+                        it,
+                        CustomToast.LONG_DURATION,
+                        CustomToast.ERROR,
+                        R.drawable.error_icon
+                    ).show()
+                }, onLoading = {})
+            }
+            adapter.enableSelectionMode(false)
+        }
+    }
+
 
     private fun setOnClickNews() {
         adapter.setOnItemClickListener {
@@ -113,12 +162,39 @@ class NewsFragment : BaseFragment<FragmentNewsBinding>() {
                     user?.id.toString()
                 )
             )
-            val action = HomeFragmentDirections.actionHomeFragmentToArticlesFragment(
-                article = it, savedArticle = null, previousScreen = "news"
-            )
-            findNavController().navigate(
-                action
-            )
+            when (previousScreen) {
+                "home" -> {
+                    val action = HomeFragmentDirections.actionHomeFragmentToArticlesFragment(
+                        article = it, savedArticle = null, previousScreen = "news"
+                    )
+                    findNavController().navigate(action)
+                }
+
+                "manage" -> {
+                    val action =
+                        ManagePostsFragmentDirections.actionManagePostsFragmentToArticlesFragment(
+                            article = it, savedArticle = null, previousScreen = "manage_news"
+                        )
+                    findNavController().navigate(action)
+                }
+
+                else -> {
+                    Logger.logE("Unknown previous screen")
+                }
+            }
         }
     }
+
+    fun searchNews(keySearch: String) {
+        val currentList = newsViewModel.newsResult.value?.data?.result ?: return
+        if (keySearch.isEmpty()) {
+            adapter.addData(currentList)
+        } else {
+            val filteredList = currentList.filter {
+                it.title.lowercase(Locale.ROOT).contains(keySearch.lowercase(Locale.ROOT))
+            }
+            adapter.addData(filteredList)
+        }
+    }
+
 }
