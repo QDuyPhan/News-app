@@ -13,10 +13,6 @@
         android:icon="@drawable/list"
         android:title="Danh mục tin tức" />
     <item
-        android:id="@+id/nav_post"
-        android:icon="@drawable/blogging"
-        android:title="Đăng tin tức" />
-    <item
         android:id="@+id/nav_approve"
         android:icon="@drawable/accept"
         android:title="Danh sách bài viết" />

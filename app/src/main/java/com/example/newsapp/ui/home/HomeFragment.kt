@@ -96,7 +96,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
         val menu = binding.navView.menu
         menu.findItem(R.id.nav_approve).isVisible = isAdmin
         menu.findItem(R.id.nav_role).isVisible = isAdmin
-        menu.findItem(R.id.nav_post).isVisible = isAdmin
         menu.findItem(R.id.nav_role).isVisible = isAdmin
         menu.findItem(R.id.nav_category).isVisible = isAdmin
         menu.findItem(R.id.nav_approve).isVisible = isAdmin
@@ -160,11 +159,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
 
             R.id.nav_category -> {
                 Toast.makeText(requireContext(), "Danh mục", Toast.LENGTH_SHORT).show()
-                return true
-            }
-
-            R.id.nav_post -> {
-                findNavController().navigate(R.id.action_homeFragment_to_postNewsFragment)
                 return true
             }
 

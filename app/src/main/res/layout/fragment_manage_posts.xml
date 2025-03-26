@@ -82,4 +82,16 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
 
+  <androidx.appcompat.widget.AppCompatImageButton
+      android:id="@+id/btnAddNews"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/_30sdp"
+      android:layout_marginBottom="@dimen/_30sdp"
+      android:background="@drawable/btn_background"
+      android:padding="@dimen/_10sdp"
+      android:src="@drawable/add_icon"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

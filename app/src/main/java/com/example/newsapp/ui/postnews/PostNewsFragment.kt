@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.example.newsapp.R
 import com.example.newsapp.data.remote.response.CategoryResponse
 import com.example.newsapp.databinding.FragmentPostNewsBinding
 import com.example.newsapp.ui.base.BaseFragment
 import com.example.newsapp.ui.home.HomeViewModel
+import com.example.newsapp.ui.widget.CustomToast
 import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.setOnSingClickListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -82,7 +85,11 @@ class PostNewsFragment : BaseFragment<FragmentPostNewsBinding>() {
     private fun clickBack() {
         binding.apply {
             actionBar.setOnClickLeft {
-                findNavController().popBackStack()
+                findNavController().navigate(
+                    R.id.action_postNewsFragment_to_managePostsFragment,
+                    null,
+                    NavOptions.Builder().setPopUpTo(R.id.postNewsFragment, true).build()
+                )
             }
         }
     }
@@ -95,6 +102,13 @@ class PostNewsFragment : BaseFragment<FragmentPostNewsBinding>() {
             postNewsViewModel.postNews(title, link, img, selectedCategoryId)
             postNews()
             setEmpty()
+            CustomToast.makeText(
+                requireContext(),
+                "Đăng tin tức thành công",
+                CustomToast.LONG_DURATION,
+                CustomToast.SUCCESS,
+                R.drawable.check_icon
+            ).show()
         }
     }
 
