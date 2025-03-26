@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -20,11 +21,12 @@ import androidx.navigation.fragment.findNavController
 import com.example.newsapp.R
 import com.example.newsapp.adapter.ViewPagerAdapter
 import com.example.newsapp.data.remote.response.CategoryResponse
+import com.example.newsapp.databinding.DialogUserinfoBinding
 import com.example.newsapp.databinding.FragmentHomeBinding
 import com.example.newsapp.ui.account.AccountViewModel
 import com.example.newsapp.ui.account.TokenViewModel
 import com.example.newsapp.ui.base.BaseFragment
-import com.example.newsapp.ui.widget.CustomToast
+import com.example.newsapp.ui.saved.SavedViewModel
 import com.example.newsapp.utils.Logger
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
@@ -38,9 +40,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
     private val homeViewModel by viewModels<HomeViewModel>()
     private val tokenViewModel by activityViewModels<TokenViewModel>()
     private val accountViewModel by activityViewModels<AccountViewModel>()
+    private val savedViewModel by activityViewModels<SavedViewModel>()
     private lateinit var navController: NavController
     private lateinit var navigationView: NavigationView
     private var token: String? = null
+    private lateinit var dialog: AlertDialog
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -173,13 +177,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
             }
 
             R.id.nav_user -> {
-                CustomToast.makeText(
-                    requireContext(),
-                    "Thông tin tài khoản",
-                    CustomToast.LONG_DURATION,
-                    CustomToast.SUCCESS,
-                    R.drawable.user_icon
-                ).show()
+                showAlertDialog()
                 return true
             }
 
@@ -199,5 +197,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
         }
         binding.homeFragment.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun showAlertDialog() {
+        val build = AlertDialog.Builder(requireContext())
+        val dialogBinding = DialogUserinfoBinding.inflate(LayoutInflater.from(requireContext()))
+        build.setView(dialogBinding.root)
+        with(savedViewModel) {
+            user.observe(viewLifecycleOwner) { user ->
+                dialogBinding.apply {
+                    tvId.text = user?.id.toString()
+                    tvName.text = user?.name.toString()
+                    tvUsername.text = user?.username.toString()
+                    tvEmail.text = user?.email.toString()
+                }
+            }
+            dialog = build.create()
+            dialog.show()
+        }
     }
 }
