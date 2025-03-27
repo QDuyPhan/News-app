@@ -4,6 +4,7 @@ import com.example.newsapp.data.remote.request.LoginRequest
 import com.example.newsapp.data.remote.request.LogoutRequest
 import com.example.newsapp.data.remote.request.PostNewsRequest
 import com.example.newsapp.data.remote.request.SignupRequest
+import com.example.newsapp.data.remote.request.UpdateUserRequest
 import com.example.newsapp.data.remote.response.ApiResponse
 import com.example.newsapp.data.remote.response.AuthenticationResponse
 import com.example.newsapp.data.remote.response.CategoryResponse
@@ -67,6 +68,14 @@ class NewsRepository @Inject constructor(
     suspend fun deleteNews(id: Long): Response<ApiResponse<Void>> =
         withContext(dispatcher) {
             newsService.deleteNews(id)
+        }
+
+    suspend fun updateUser(
+        userId: String,
+        updateUserRequest: UpdateUserRequest
+    ): Response<ApiResponse<UserResponse>> =
+        withContext(dispatcher) {
+            newsService.updateUser(userId, updateUserRequest)
         }
 
 }

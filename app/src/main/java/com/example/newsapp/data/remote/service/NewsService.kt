@@ -3,6 +3,7 @@ package com.example.newsapp.data.remote.service
 import com.example.newsapp.data.remote.request.LoginRequest
 import com.example.newsapp.data.remote.request.PostNewsRequest
 import com.example.newsapp.data.remote.request.SignupRequest
+import com.example.newsapp.data.remote.request.UpdateUserRequest
 import com.example.newsapp.data.remote.response.ApiResponse
 import com.example.newsapp.data.remote.response.AuthenticationResponse
 import com.example.newsapp.data.remote.response.CategoryResponse
@@ -13,6 +14,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface NewsService {
@@ -44,4 +46,11 @@ interface NewsService {
 
     @DELETE("news/{newId}")
     suspend fun deleteNews(@Path("newId") id: Long): Response<ApiResponse<Void>>
+
+    @PUT("/users/{userId}")
+    suspend fun updateUser(
+        @Path("userId") id: String,
+        @Body updateUserRequest: UpdateUserRequest
+    ): Response<ApiResponse<UserResponse>>
+
 }

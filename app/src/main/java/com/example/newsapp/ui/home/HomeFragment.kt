@@ -101,7 +101,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
         menu.findItem(R.id.nav_approve).isVisible = isAdmin
         menu.findItem(R.id.nav_role).isVisible = isAdmin
         menu.findItem(R.id.nav_role).isVisible = isAdmin
-        menu.findItem(R.id.nav_category).isVisible = isAdmin
+//        menu.findItem(R.id.nav_category).isVisible = isAdmin
         menu.findItem(R.id.nav_approve).isVisible = isAdmin
     }
 
@@ -161,10 +161,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
                 return true
             }
 
-            R.id.nav_category -> {
-                Toast.makeText(requireContext(), "Danh mục", Toast.LENGTH_SHORT).show()
-                return true
-            }
+//            R.id.nav_category -> {
+//                Toast.makeText(requireContext(), "Danh mục", Toast.LENGTH_SHORT).show()
+//                return true
+//            }
 
             R.id.nav_approve -> {
                 findNavController().navigate(R.id.action_homeFragment_to_managePostsFragment)
@@ -212,8 +212,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
                     tvEmail.text = user?.email.toString()
                 }
             }
-            dialog = build.create()
-            dialog.show()
         }
+        dialog = build.create()
+        dialog.show()
     }
 }

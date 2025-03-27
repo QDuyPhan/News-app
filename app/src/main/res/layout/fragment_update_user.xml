@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.updateuserinfo.UpdateUserFragment">
+
+  <com.example.newsapp.ui.widget.ActionBarView
+      android:id="@+id/action_bar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/background_transparent"
+      android:elevation="10dp"
+      app:action_bar_enable_left="true"
+      app:action_bar_title=""
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <ImageView
+      android:id="@+id/bgChangePass"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/_160sdp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/action_bar" />
+
+  <ImageView
+      android:id="@+id/imageView2"
+      android:layout_width="62dp"
+      android:layout_height="59dp"
+      android:layout_marginTop="88dp"
+      android:src="@drawable/profile"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.498"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="28dp"
+      android:text="Cập nhật thông tin"
+      android:textColor="@color/text_color"
+      android:textSize="32sp"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.496"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+  <androidx.cardview.widget.CardView
+      android:id="@+id/card_view"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      app:cardCornerRadius="28dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/bgChangePass">
+
+    <LinearLayout
+        android:id="@+id/wrapUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_27sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_27sdp"
+        android:orientation="vertical">
+
+      <EditText
+          android:id="@+id/edtName"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/_10sdp"
+          android:background="@drawable/edit_text_background"
+          android:hint="Name"
+          android:inputType="text"
+          android:padding="@dimen/_10sdp"
+          android:textSize="@dimen/_10sdp" />
+
+      <EditText
+          android:id="@+id/edtEmail"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/_10sdp"
+          android:background="@drawable/edit_text_background"
+          android:hint="Email"
+          android:inputType="text"
+          android:padding="@dimen/_10sdp"
+          android:textSize="@dimen/_10sdp" />
+
+      <EditText
+          android:id="@+id/edtPass"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/_10sdp"
+          android:background="@drawable/edit_text_background"
+          android:hint="Password"
+          android:inputType="text"
+          android:padding="@dimen/_10sdp"
+          android:textSize="@dimen/_10sdp" />
+
+      <androidx.appcompat.widget.AppCompatButton
+          android:id="@+id/btnUpdateUserInfo"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/_35sdp"
+          android:layout_marginTop="@dimen/_20sdp"
+          android:background="@drawable/btn_background"
+          android:text="Cập nhật thông tin"
+          android:textColor="@color/white" />
+    </LinearLayout>
+
+  </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
