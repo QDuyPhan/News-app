@@ -128,7 +128,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     private fun showDialogWeather() {
         binding.apply {
             weather.setOnSingClickListener {
-                Toast.makeText(requireContext(), "Weather", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_profileFragment_to_weatherFragment)
             }
         }
     }

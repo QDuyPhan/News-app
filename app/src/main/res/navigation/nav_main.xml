@@ -57,13 +57,25 @@
         app:argType="string" />
     <action
         android:id="@+id/action_articlesFragment_to_savedFragment"
-        app:destination="@id/savedFragment" />
+        app:destination="@id/savedFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_articlesFragment_to_homeFragment"
-        app:destination="@id/homeFragment" />
+        app:destination="@id/homeFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_articlesFragment_to_summaryFragment"
-        app:destination="@id/summaryFragment" />
+        app:destination="@id/summaryFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
   <fragment
       android:id="@+id/homeFragment"
@@ -71,19 +83,39 @@
       tools:layout="@layout/fragment_home">
     <action
         android:id="@+id/action_homeFragment_to_articlesFragment"
-        app:destination="@id/articlesFragment" />
+        app:destination="@id/articlesFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_homeFragment_to_loginFragment"
-        app:destination="@id/loginFragment" />
+        app:destination="@id/loginFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_homeFragment_to_categoryFragment"
-        app:destination="@id/categoryFragment" />
+        app:destination="@id/categoryFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_homeFragment_to_postNewsFragment"
-        app:destination="@id/postNewsFragment" />
+        app:destination="@id/postNewsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_homeFragment_to_managePostsFragment"
-        app:destination="@id/managePostsFragment" />
+        app:destination="@id/managePostsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
   <fragment
       android:id="@+id/newsFragment"
@@ -92,7 +124,11 @@
       tools:layout="@layout/fragment_news">
     <action
         android:id="@+id/action_newsFragment_to_articlesFragment"
-        app:destination="@id/articlesFragment" />
+        app:destination="@id/articlesFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
   <fragment
       android:id="@+id/categoryFragment"
@@ -106,7 +142,11 @@
       tools:layout="@layout/fragment_saved">
     <action
         android:id="@+id/action_savedFragment_to_articlesFragment"
-        app:destination="@id/articlesFragment" />
+        app:destination="@id/articlesFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
   <fragment
       android:id="@+id/searchFragment"
@@ -115,7 +155,11 @@
       tools:layout="@layout/fragment_search">
     <action
         android:id="@+id/action_searchFragment_to_articlesFragment"
-        app:destination="@id/articlesFragment" />
+        app:destination="@id/articlesFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
   <fragment
       android:id="@+id/summaryFragment"
@@ -123,22 +167,45 @@
       tools:layout="@layout/fragment_summary">
     <action
         android:id="@+id/action_summaryFragment_to_articlesFragment"
-        app:destination="@id/articlesFragment" />
+        app:destination="@id/articlesFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
   <fragment
       android:id="@+id/profileFragment"
       android:name="com.example.newsapp.ui.profile.ProfileFragment"
       android:label="fragment_profile"
-      tools:layout="@layout/fragment_profile" >
+      tools:layout="@layout/fragment_profile">
     <action
         android:id="@+id/action_profileFragment_to_loginFragment"
-        app:destination="@id/loginFragment" />
+        app:destination="@id/loginFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_profileFragment_to_changePasswordFragment"
-        app:destination="@id/changePasswordFragment" />
+        app:destination="@id/changePasswordFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_profileFragment_to_updateUserFragment"
-        app:destination="@id/updateUserFragment" />
+        app:destination="@id/updateUserFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+    <action
+        android:id="@+id/action_profileFragment_to_weatherFragment"
+        app:destination="@id/weatherFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
   <fragment
       android:id="@+id/postNewsFragment"
@@ -147,10 +214,18 @@
       tools:layout="@layout/fragment_post_news">
     <action
         android:id="@+id/action_postNewsFragment_to_homeFragment"
-        app:destination="@id/homeFragment" />
+        app:destination="@id/homeFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_postNewsFragment_to_managePostsFragment"
-        app:destination="@id/managePostsFragment" />
+        app:destination="@id/managePostsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
   <fragment
       android:id="@+id/managePostsFragment"
@@ -159,31 +234,64 @@
       tools:layout="@layout/fragment_manage_posts">
     <action
         android:id="@+id/action_managePostsFragment_to_homeFragment"
-        app:destination="@id/homeFragment" />
+        app:destination="@id/homeFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_managePostsFragment_to_articlesFragment"
-        app:destination="@id/articlesFragment" />
+        app:destination="@id/articlesFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
     <action
         android:id="@+id/action_managePostsFragment_to_postNewsFragment"
-        app:destination="@id/postNewsFragment" />
+        app:destination="@id/postNewsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
   <fragment
       android:id="@+id/changePasswordFragment"
       android:name="com.example.newsapp.ui.changepassword.ChangePasswordFragment"
       android:label="fragment_change_password"
-      tools:layout="@layout/fragment_change_password" >
+      tools:layout="@layout/fragment_change_password">
     <action
         android:id="@+id/action_changePasswordFragment_to_profileFragment"
-        app:destination="@id/profileFragment" />
+        app:destination="@id/profileFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
   <fragment
       android:id="@+id/updateUserFragment"
       android:name="com.example.newsapp.ui.updateuserinfo.UpdateUserFragment"
       android:label="fragment_update_user"
-      tools:layout="@layout/fragment_update_user" >
+      tools:layout="@layout/fragment_update_user">
     <action
         android:id="@+id/action_updateUserFragment_to_profileFragment"
-        app:destination="@id/profileFragment" />
+        app:destination="@id/profileFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
+  </fragment>
+  <fragment
+      android:id="@+id/weatherFragment"
+      android:name="com.example.newsapp.ui.weather.WeatherFragment"
+      android:label="fragment_weather"
+      tools:layout="@layout/fragment_weather">
+    <action
+        android:id="@+id/action_weatherFragment_to_profileFragment"
+        app:destination="@id/profileFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
   </fragment>
 
 </navigation>

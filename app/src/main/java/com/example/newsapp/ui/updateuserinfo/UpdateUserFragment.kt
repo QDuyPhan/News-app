@@ -43,7 +43,7 @@ class UpdateUserFragment : BaseFragment<FragmentUpdateUserBinding>() {
                 val email = edtEmail.text.toString()
                 val password = edtPass.text.toString()
 
-                if (name.isBlank()&& email.isBlank() && password.isBlank()) {
+                if (name.isBlank() && email.isBlank() && password.isBlank()) {
                     CustomToast.makeText(
                         requireContext(),
                         "Vui lòng nhập thông tin cần cập nhật",

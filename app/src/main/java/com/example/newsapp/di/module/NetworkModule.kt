@@ -21,6 +21,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.time.LocalDateTime
+import javax.inject.Named
 import javax.inject.Provider
 import javax.inject.Singleton
 
@@ -29,6 +30,7 @@ import javax.inject.Singleton
 object NetworkModule {
     @Provides
     @Singleton
+    @Named("news_base_url")
     fun provideBaseUrl() = BuildConfig.BASE_URL
 
     @Provides
@@ -37,6 +39,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @Named("default_gson")
     fun provideGson(): Gson =
         GsonBuilder().registerTypeAdapter(LocalDateTime::class.java, LocalDateTimeDeserializer())
             .setLenient().create()
@@ -78,7 +81,9 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofit(
-        baseUrl: String, gson: Gson, okHttpClient: OkHttpClient
+        @Named("news_base_url") baseUrl: String,
+        @Named("default_gson") gson: Gson,
+        okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder().baseUrl(baseUrl).client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson)).build()

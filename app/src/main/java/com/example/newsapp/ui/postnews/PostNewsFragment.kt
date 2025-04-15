@@ -99,17 +99,44 @@ class PostNewsFragment : BaseFragment<FragmentPostNewsBinding>() {
             val title = binding.edtTitle.text.toString()
             val link = binding.edtLinkContent.text.toString()
             val img = binding.edtLinkImg.text.toString()
-            postNewsViewModel.postNews(title, link, img, selectedCategoryId)
-            postNews()
-            setEmpty()
-            CustomToast.makeText(
-                requireContext(),
-                "Đăng tin tức thành công",
-                CustomToast.LONG_DURATION,
-                CustomToast.SUCCESS,
-                R.drawable.check_icon
-            ).show()
+            if (title.isBlank() || link.isBlank() || img.isBlank()) {
+                if (title.isBlank()) CustomToast.makeText(
+                    requireContext(),
+                    "Tiêu đề không được bỏ trống",
+                    CustomToast.LONG_DURATION,
+                    CustomToast.WARNING,
+                    R.drawable.warning_icon
+                ).show()
+                if (link.isBlank()) CustomToast.makeText(
+                    requireContext(),
+                    "Đường dẫn bài viết không được bỏ trống",
+                    CustomToast.LONG_DURATION,
+                    CustomToast.WARNING,
+                    R.drawable.warning_icon
+                ).show()
+                if (img.isBlank()) CustomToast.makeText(
+                    requireContext(),
+                    "Đường dẫn hình ảnh không đươc bỏ trống",
+                    CustomToast.LONG_DURATION,
+                    CustomToast.WARNING,
+                    R.drawable.warning_icon
+                ).show()
+
+            } else {
+                postNewsViewModel.postNews(title, link, img, selectedCategoryId)
+                postNews()
+                setEmpty()
+                CustomToast.makeText(
+                    requireContext(),
+                    "Đăng tin tức thành công",
+                    CustomToast.LONG_DURATION,
+                    CustomToast.SUCCESS,
+                    R.drawable.check_icon
+                ).show()
+            }
         }
+
+
     }
 
     private fun postNews() {
