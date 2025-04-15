@@ -49,9 +49,6 @@ app/
 │   └── test/                                           # Directory containing tests
 └── build.gradle                                        # Gradle configuration file of the app
 ```
-```text
-
-```
 
 ## 🚀 Features
 
