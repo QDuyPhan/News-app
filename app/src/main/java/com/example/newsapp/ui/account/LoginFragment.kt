@@ -43,8 +43,21 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
             signInBtn.setOnSingClickListener {
                 val username = editUsernameSignIN.text.toString()
                 val password = editPassSignIn.text.toString()
-                if (username.isEmpty() || password.isEmpty()) {
-                    Logger.logI("Hãy Nhập Đầy Đủ Thông Tin")
+                if (username.isBlank() || password.isBlank()) {
+                    if (username.isBlank()) CustomToast.makeText(
+                        requireContext(),
+                        "Username không được bỏ trống",
+                        CustomToast.LONG_DURATION,
+                        CustomToast.WARNING,
+                        R.drawable.warning_icon
+                    ).show()
+                    if (password.isBlank()) CustomToast.makeText(
+                        requireContext(),
+                        "Password không được bỏ trống",
+                        CustomToast.LONG_DURATION,
+                        CustomToast.WARNING,
+                        R.drawable.warning_icon
+                    ).show()
                 } else {
                     accountViewModel.login(username, password)
                     setupObserver()
@@ -71,6 +84,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
         observeResource(
             liveData = accountViewModel.loginResult,
             onSuccess = {
+                binding.prgBarLogin.visibility = View.VISIBLE
                 accountViewModel.saveLoginState(value = true)
                 tokenViewModel.saveToken(it.result.token)
                 checkToken()
@@ -81,13 +95,24 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
                     CustomToast.SUCCESS,
                     R.drawable.check_icon
                 ).show()
+                binding.prgBarLogin.visibility = View.GONE
             },
             onError = {
+                binding.prgBarLogin.visibility = View.VISIBLE
                 val error = it
                 Logger.logE(error)
+                CustomToast.makeText(
+                    requireContext(),
+                    "Đăng Nhập Thất Bại",
+                    CustomToast.LONG_DURATION,
+                    CustomToast.ERROR,
+                    R.drawable.error_icon
+                )
+                binding.prgBarLogin.visibility = View.GONE
             },
             onLoading = {
-                Logger.logI("Logging...")
+                binding.prgBarLogin.visibility = View.VISIBLE
+                Logger.logI("Đang đăng nhập...")
             }
         )
     }

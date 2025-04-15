@@ -22,8 +22,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
     private val viewModel by viewModels<AccountViewModel>()
 
     override fun inflateBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
+        inflater: LayoutInflater, container: ViewGroup?
     ): FragmentRegisterBinding {
         return FragmentRegisterBinding.inflate(inflater, container, false)
     }
@@ -40,8 +39,36 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
                 val username = editUsernameSignUp.text.toString()
                 val password = editPassSignUp.text.toString()
                 val email = editEmailSignUp.text.toString()
-                if (username.isEmpty() || name.isEmpty() || password.isEmpty() || email.isEmpty()) {
-                    Logger.logW("Hãy Nhập Đầy Đủ Thông Tin")
+
+                if (name.isBlank() || email.isBlank() || password.isBlank() || username.isBlank()) {
+                    if (name.isBlank()) CustomToast.makeText(
+                        requireContext(),
+                        "Tên không được bỏ trống",
+                        CustomToast.LONG_DURATION,
+                        CustomToast.WARNING,
+                        R.drawable.warning_icon
+                    ).show()
+                    if (email.isBlank()) CustomToast.makeText(
+                        requireContext(),
+                        "Email không được bỏ trống",
+                        CustomToast.LONG_DURATION,
+                        CustomToast.WARNING,
+                        R.drawable.warning_icon
+                    ).show()
+                    if (password.isBlank()) CustomToast.makeText(
+                        requireContext(),
+                        "Mật khẩu không đươc bỏ trống",
+                        CustomToast.LONG_DURATION,
+                        CustomToast.WARNING,
+                        R.drawable.warning_icon
+                    ).show()
+                    if (username.isBlank()) CustomToast.makeText(
+                        requireContext(),
+                        "Username không được bỏ trống",
+                        CustomToast.LONG_DURATION,
+                        CustomToast.WARNING,
+                        R.drawable.warning_icon
+                    ).show()
                 } else {
                     viewModel.signup(name, username, password, email)
                     setupObserver()
@@ -65,35 +92,30 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>() {
 
     private fun setupObserver() {
         binding.apply {
-            observeResource(
-                liveData = viewModel.signupResult,
-                onSuccess = {
-                    prgBarMovies.visibility = View.GONE
-                    clearEmptyText()
-                    CustomToast.makeText(
-                        requireContext(),
-                        "Đăng Ký Thành Công",
-                        CustomToast.LONG_DURATION,
-                        CustomToast.SUCCESS,
-                        R.drawable.check_icon
-                    ).show()
-                },
-                onError = {
-                    prgBarMovies.visibility = View.GONE
-                    val error = it
-                    CustomToast.makeText(
-                        requireContext(),
-                        error,
-                        CustomToast.LONG_DURATION,
-                        CustomToast.SUCCESS,
-                        R.drawable.check_icon
-                    ).show()
-                    Logger.logE(error)
-                },
-                onLoading = {
-                    prgBarMovies.visibility = View.VISIBLE
-                }
-            )
+            observeResource(liveData = viewModel.signupResult, onSuccess = {
+                prgBarMovies.visibility = View.GONE
+                clearEmptyText()
+                CustomToast.makeText(
+                    requireContext(),
+                    "Đăng Ký Thành Công",
+                    CustomToast.LONG_DURATION,
+                    CustomToast.SUCCESS,
+                    R.drawable.check_icon
+                ).show()
+            }, onError = {
+                prgBarMovies.visibility = View.GONE
+                val error = it
+                CustomToast.makeText(
+                    requireContext(),
+                    error,
+                    CustomToast.LONG_DURATION,
+                    CustomToast.SUCCESS,
+                    R.drawable.check_icon
+                ).show()
+                Logger.logE(error)
+            }, onLoading = {
+                prgBarMovies.visibility = View.VISIBLE
+            })
         }
     }
 

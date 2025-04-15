@@ -36,6 +36,9 @@ class AccountViewModel @Inject constructor(
     private val _logoutResult = MutableLiveData<Resource<ApiResponse<Void>>>()
     val logoutResult: LiveData<Resource<ApiResponse<Void>>> get() = _logoutResult
 
+    private val _deleteUserResult = MutableLiveData<Resource<ApiResponse<String>>>()
+    val deleteUserResult: LiveData<Resource<ApiResponse<String>>> get() = _deleteUserResult
+
     private val _isReady = MutableStateFlow(false)
     val isReady = _isReady.asStateFlow()
 
@@ -71,5 +74,12 @@ class AccountViewModel @Inject constructor(
         safeApiCall(_signupResult, networkHelper) {
             newsRepository.signup(SignupRequest(name, username, email, password))
         }
+    }
+
+    fun deleteUser(userId: String) {
+        safeApiCall(_deleteUserResult, networkHelper) {
+            newsRepository.deleteUser(userId)
+        }
+
     }
 }

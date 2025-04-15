@@ -19,6 +19,8 @@ import com.example.newsapp.ui.account.TokenViewModel
 import com.example.newsapp.ui.base.BaseFragment
 import com.example.newsapp.ui.home.HomeViewModel
 import com.example.newsapp.ui.saved.SavedViewModel
+import com.example.newsapp.ui.updateuserinfo.UpdateUserViewModel
+import com.example.newsapp.utils.Logger
 import com.example.newsapp.utils.setOnSingClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,9 +31,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     private val homeViewModel by viewModels<HomeViewModel>()
     private val tokenViewModel by activityViewModels<TokenViewModel>()
     private val accountViewModel by activityViewModels<AccountViewModel>()
+    private val updateUserViewModel by viewModels<UpdateUserViewModel>()
     private lateinit var navController: NavController
     private var token: String? = null
     private lateinit var dialog: AlertDialog
+    private var userId: String? = null
 
     override fun inflateBinding(
         inflater: LayoutInflater, container: ViewGroup?
@@ -42,11 +46,19 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = findNavController()
+        getUserId()
         checkToken()
         showUserInfo()
         showOptionDialog()
         showDialogWeather()
         logout()
+        observeDeleteUser()
+    }
+
+    private fun getUserId() {
+        updateUserViewModel.userId.observe(viewLifecycleOwner) {
+            this.userId = it.id
+        }
     }
 
     private fun showUserInfo() {
@@ -68,24 +80,49 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>() {
                 build.setView(dialogBinding.root)
 
 
-                val btnChangePassword = dialogBinding.btnChangePassword
+//                val btnChangePassword = dialogBinding.btnChangePassword
                 val btnUpdateInfo = dialogBinding.btnUpdateUserInfo
                 val btnDeleteInfo = dialogBinding.btnDelete
-                btnChangePassword.setOnClickListener {
-                    dialog.dismiss()
-                    findNavController().navigate(R.id.action_profileFragment_to_changePasswordFragment)
-                }
+//                btnChangePassword.setOnClickListener {
+//                    dialog.dismiss()
+//                    findNavController().navigate(R.id.action_profileFragment_to_changePasswordFragment)
+//                }
                 btnUpdateInfo.setOnClickListener {
                     dialog.dismiss()
                     findNavController().navigate(R.id.action_profileFragment_to_updateUserFragment)
                 }
                 btnDeleteInfo.setOnClickListener {
-                    dialog.dismiss()
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Xác nhận xoá tài khoản")
+                        .setMessage("Bạn có chắc chắn muốn xoá tài khoản không? Hành động này không thể hoàn tác.")
+                        .setPositiveButton("Yes") { dialogInterface, _ ->
+                            Logger.logI("userId: $userId")
+                            accountViewModel.deleteUser(userId.toString())
+                            dialogInterface.dismiss()
+                        }
+                        .setNegativeButton("Cancel") { dialogInterface, _ ->
+                            dialogInterface.dismiss()
+                        }
+                        .show()
                 }
                 dialog = build.create()
                 dialog.show()
             }
         }
+    }
+
+    private fun observeDeleteUser() {
+        observeResource(
+            liveData = accountViewModel.deleteUserResult,
+            onSuccess = {
+                logout()
+            }, onError = {
+                val error = it
+                Logger.logE(error)
+            }, onLoading = {
+                Logger.logI("Waiting delete user...")
+            }
+        )
     }
 
     private fun showDialogWeather() {

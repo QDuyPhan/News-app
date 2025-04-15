@@ -79,7 +79,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(),
         observeResource(
             liveData = homeViewModel.userInfo,
             onSuccess = {
-                homeViewModel.saveUserInfo(it.result)
+                homeViewModel.saveUserInfo( it.result)
                 it.result.roles.map {
                     setMenuByRole(it.name)
                 }

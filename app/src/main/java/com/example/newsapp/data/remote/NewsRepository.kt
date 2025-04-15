@@ -78,4 +78,10 @@ class NewsRepository @Inject constructor(
             newsService.updateUser(userId, updateUserRequest)
         }
 
+    suspend fun deleteUser(userId: String): Response<ApiResponse<String>> =
+        withContext(dispatcher) {
+            authService.deleteUser(userId)
+        }
+
+
 }
