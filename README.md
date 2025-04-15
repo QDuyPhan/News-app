@@ -4,34 +4,56 @@
 từ [NewsAPI.org](https://newsapi.org/) để hiển thị các bài báo mới nhất từ nhiều nguồn tin tức uy
 tín.
 
-## 🚀 Tính năng nổi bật
 
-- 🔹 Giao diện hiện đại với **Jetpack Compose**
-- 🔹 Hiển thị tin tức theo **chủ đề** và **nguồn**
-- 🔹 **Tìm kiếm** bài viết theo từ khóa
-- 🔹 **Lưu tin tức** yêu thích để đọc sau
-- 🔹 Hỗ trợ **chế độ sáng/tối**
-- 🔹 Tối ưu hiệu suất và dễ mở rộng
+---
 
-## 🛠️ Công nghệ sử dụng
+## 🏗️ Kiến trúc dự án
 
-| Thành phần            | Mô tả                |
-|-----------------------|----------------------|
-| 🧠 Kotlin             | Ngôn ngữ chính       |
-| 🧩 Jetpack Compose    | UI hiện đại          |
-| 📡 Retrofit & OkHttp  | Gọi API              |
-| 🔐 Hilt               | Dependency Injection |
-| 🧮 Room Database      | Lưu trữ offline      |
-| 🖼️ Coil              | Load ảnh nhanh       |
-| 🧭 Navigation Compose | Điều hướng màn hình  |
+com.example.newsapp ├── adapter # Các adapter cho RecyclerView ├── data │ ├── local # Dữ liệu cục bộ
+│ │ ├── dao # DAO cho Room │ │ ├── entity # Entity của Room database │ │ ├── datastore #
+Preferences & Proto DataStore │ │ └── service # Repository cho local storage │ └── remote # Dữ liệu
+từ mạng │ ├── request # Model gửi API │ ├── response # Model nhận API │ └── service # Retrofit &
+Repository mạng ├── di # Dependency Injection với Hilt ├── viewmodel # Tầng ViewModel ├── listener #
+Interface lắng nghe sự kiện ├── paging # Paging 3 hỗ trợ phân trang ├── ui # Giao diện người dùng
+chia theo màn hình (feature-based) │ ├── account │ ├── articles │ ├── base │ ├── category │ ├──
+changepassword │ ├── home │ ├── main │ ├── manage │ ├── news │ ├── postnews │ ├── profile │ ├──
+saved │ ├── search │ ├── splash │ ├── summary │ ├── updateuserinfo │ ├── weather │ └── widget ├──
+utils # Hàm tiện ích └── NewsApp # Application class
 
-## 📸 Hình ảnh minh họa
+## 🚀 Tính năng chính
 
-> _Thêm ảnh màn hình giao diện ứng dụng tại đây nếu có_
+- 📲 Đọc tin tức thời gian thực
+- 🔍 Tìm kiếm tin tức theo từ khóa
+- 💾 Lưu tin yêu thích
+- 📡 Dự báo thời tiết đơn giản
+- 📚 Giao diện chia màn rõ ràng (feature-based UI)
+- 🔔 Push notification (FCM)
+- 🌙 Hỗ trợ Dark Mode
+- ⚡ Splash screen
 
-## 🔧 Cài đặt và chạy ứng dụng
+---
 
-### 1. Clone dự án
+## ⚙️ Công nghệ sử dụng
+
+| Thành phần           | Công nghệ                                                    |
+|----------------------|--------------------------------------------------------------|
+| Dependency Injection | Dagger Hilt                                                  |
+| Networking           | Retrofit, OkHttp, Gson                                       |
+| Cơ sở dữ liệu        | Room, DataStore (Preferences & Proto), Firebase Firestore    |
+| UI & UX              | Material Design, Navigation Component, SDPs, CircleImageView |
+| Ảnh                  | Glide, Coil, Picasso, RoundedImageView                       |
+| Asynchronous         | Kotlin Coroutines                                            |
+| View Binding         | ViewModel, LiveData                                          |
+| Phân trang           | Paging 3                                                     |
+| Xử lý JSON           | Moshi, Gson, Kotlinx Serialization                           |
+| Firebase             | Auth, Firestore, Database, Remote Config, Analytics, FCM     |
+| Logging              | Timber                                                       |
+
+---
+
+## 🔧 Cài đặt
+
+1. Clone repo:
 
 ```bash
 git clone https://github.com/QDuyPhan/News-app.git
