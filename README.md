@@ -9,16 +9,28 @@ tín.
 
 ## 🏗️ Kiến trúc dự án
 
-com.example.newsapp ├── adapter # Các adapter cho RecyclerView ├── data │ ├── local # Dữ liệu cục bộ
-│ │ ├── dao # DAO cho Room │ │ ├── entity # Entity của Room database │ │ ├── datastore #
-Preferences & Proto DataStore │ │ └── service # Repository cho local storage │ └── remote # Dữ liệu
-từ mạng │ ├── request # Model gửi API │ ├── response # Model nhận API │ └── service # Retrofit &
-Repository mạng ├── di # Dependency Injection với Hilt ├── viewmodel # Tầng ViewModel ├── listener #
-Interface lắng nghe sự kiện ├── paging # Paging 3 hỗ trợ phân trang ├── ui # Giao diện người dùng
-chia theo màn hình (feature-based) │ ├── account │ ├── articles │ ├── base │ ├── category │ ├──
-changepassword │ ├── home │ ├── main │ ├── manage │ ├── news │ ├── postnews │ ├── profile │ ├──
-saved │ ├── search │ ├── splash │ ├── summary │ ├── updateuserinfo │ ├── weather │ └── widget ├──
-utils # Hàm tiện ích └── NewsApp # Application class
+```text
+app/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   ├── com.example.newsapp/
+│   │   │   │   ├── data/
+│   │   │   │   │   ├── model/              # Classes defining data
+│   │   │   │   │   ├── repository/         # Classes accessing data
+│   │   │   │   │   └── ...
+│   │   │   │   ├── di/                     # Dependency Injection configuration
+│   │   │   │   ├── ui/
+│   │   │   │   │   ├── base/               # Base classes for UI components
+│   │   │   │   │   ├── adapters/           # Adapters for RecyclerView or ListView
+│   │   │   │   │   ├── fragments/          # Fragments in the app
+│   │   │   │   │   └── viewmodels/         # ViewModels for MVVM architecture
+│   │   │   │   └── util/                   # Useful utilities
+│   │   ├── res/                            # Resources (layout, drawable, values, etc.)
+│   └── test/                               # Directory containing tests
+└── build.gradle                            # Gradle configuration file of the app
+```
+
 
 ## 🚀 Tính năng chính
 
