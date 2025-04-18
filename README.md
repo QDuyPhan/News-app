@@ -90,7 +90,7 @@ git clone https://github.com/QDuyPhan/News-app.git
 ## 🌐 Backend API
 
 ```bash
-git clone https://github.com/QDuyPhan/news-backendt
+git clone https://github.com/QDuyPhan/news-backend
 ```
 ## 📄 License
 
